@@ -17,6 +17,10 @@ WP Local Toolbox uses three constants defined in wp-config.php:
 
 ##Example:
 
+```
 define( 'WPLT_ENVIRONMENT', 'local');
+
 define( 'WPLT_COLOR', 'green');
+
 define ('WPLT_DISABLED_PLUGINS', serialize ( array( 'w3-total-cache/w3-total-cache.php', 'updraftplus/updraftplus.php', 'nginx-helper/nginx-helper.php', 'wpremote/plugin.php' ) ));
+```
