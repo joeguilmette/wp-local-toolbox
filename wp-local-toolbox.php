@@ -75,8 +75,6 @@ if (defined('WPLT_ENVIRONMENT') && WPLT_ENVIRONMENT ) {
 
 	// Style the admin notice and admin bar
 	function environment_notice_css() {
-		// This makes sure that the positioning is also good for right-to-left languages
-		$x = is_rtl() ? 'left' : 'right';
 
 		if (defined( 'WPLT_COLOR' ) && WPLT_COLOR) {
 			$env_color = strtolower(WPLT_COLOR);
@@ -87,8 +85,8 @@ if (defined('WPLT_ENVIRONMENT') && WPLT_ENVIRONMENT ) {
 		echo "
 		<style type='text/css'>
 		#environment-notice {
-			float: $x;
-			padding-$x: 15px;
+			float: right;
+			padding-right: 15px;
 			// padding-top: 5px;		
 			margin: 0;
 			font-size: 20px;
