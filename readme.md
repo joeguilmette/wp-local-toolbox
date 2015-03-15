@@ -6,9 +6,9 @@ WP Local Toolbox uses three constants defined in wp-config.php:
 
 * **WPLT_ENVIRONMENT**: This is the name of your environment. If left undefined, the plugin will do nothing. 
 
-* * If defined as 'PRODUCTION' or 'LIVE', the plugin will display the environment as an admin notice on the admin panel and modify the color of the admin bar. 
+	* If defined as 'PRODUCTION' or 'LIVE', the plugin will display the environment as an admin notice on the admin panel and modify the color of the admin bar. 
 
-* * If defined as anything else, it will also enable 'Discourage search engines from indexing this site' to prevent your development site from being indexed, and it will disable any plugins defined in WPLT_DISABLED_PLUGINS.
+	* If defined as anything else, it will also enable 'Discourage search engines from indexing this site' to prevent your development site from being indexed, and it will disable any plugins defined in WPLT_DISABLED_PLUGINS.
 
 * **WPLT_COLOR**: This determines the color of the admin bar. You can set this to any CSS color. Will default to red if left undefined.
 
