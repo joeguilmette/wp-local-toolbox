@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: WP Local Toolbox
-Description: A simple plugin to set different defaults for local, staging and production servers.
+Description: A simple plugin to set different defaults for production, staging and local servers.
 Author: Joe Guilmette
 Version: 1.0
 Author URI: http://joeguilmette.com
@@ -65,11 +65,11 @@ class CWS_Disable_Plugins_When_Local_Dev {
 	}
 }
 
-if (defined('WPLDS_ENVIRONMENT') && WPLDS_ENVIRONMENT ) {
+if (defined('WPLT_ENVIRONMENT') && WPLT_ENVIRONMENT ) {
 
 	// Add admin notice
 	function environment_notice() {
-		$env_text = strtoupper(WPLDS_ENVIRONMENT);
+		$env_text = strtoupper(WPLT_ENVIRONMENT);
 		echo "<p id='environment-notice'>$env_text SERVER</p>";
 	}
 
@@ -78,8 +78,8 @@ if (defined('WPLDS_ENVIRONMENT') && WPLDS_ENVIRONMENT ) {
 		// This makes sure that the positioning is also good for right-to-left languages
 		$x = is_rtl() ? 'left' : 'right';
 
-		if (defined( 'WPLDS_COLOR' ) && WPLDS_COLOR) {
-			$env_color = strtolower(WPLDS_COLOR);
+		if (defined( 'WPLT_COLOR' ) && WPLT_COLOR) {
+			$env_color = strtolower(WPLT_COLOR);
 		} else {
 			$env_color = 'red';
 		}
@@ -103,11 +103,13 @@ if (defined('WPLDS_ENVIRONMENT') && WPLDS_ENVIRONMENT ) {
 		";
 	}
 
-	if (strtoupper(WPLDS_ENVIRONMENT) != 'LIVE' && strtoupper(WPLDS_ENVIRONMENT) != 'PRODUCTION') {
+	if (strtoupper(WPLT_ENVIRONMENT) != 'LIVE' && strtoupper(WPLT_ENVIRONMENT) != 'PRODUCTION') {
 		// EVERYTHING EXCEPT PRODUCTION/LIVE ENVIRONMENT
 
-		// To disable plugins:
-		new CWS_Disable_Plugins_When_Local_Dev( array( 'w3-total-cache/w3-total-cache.php', 'updraftplus/updraftplus.php', 'nginx-helper/nginx-helper.php', 'wpremote/plugin.php' ) );
+		// Disable plugins
+		if (defined('DISABLED_PLUGINS') && WPLT_DISABLED_PLUGINS ) {
+			new CWS_Disable_Plugins_When_Local_Dev( unserialize (WPLT_DISABLED_PLUGINS) );
+		}
 
 		// Hide from robots
 		add_filter( 'pre_option_blog_public', '__return_zero' );
