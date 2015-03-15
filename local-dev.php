@@ -1,9 +1,9 @@
 <?php
 /*
-Plugin Name: WP Local Dev Suite
+Plugin Name: WP Local Toolbox
 Description: A simple plugin to set different defaults for local, staging and production servers.
 Author: Joe Guilmette
-Version: .1
+Version: 1.0
 Author URI: http://joeguilmette.com
 */
 
@@ -16,30 +16,119 @@ Then we'll set the robots based on $env
 */
 
 
-add_action( 'admin_notices', 'hello_dolly' );
 
-function environment_notice($env) {
-	echo "<p id='dolly'>$env</p>";
-}
+class CWS_Disable_Plugins_When_Local_Dev {
+	// Author: Mark Jaquith
+	// Author URI: http://coveredwebservices.com/
+	static $instance;
+	private $disabled = array();
 
-function admin_css($env) {
+	/**
+	 * Sets up the options filter, and optionally handles an array of plugins to disable
+	 * @param array $disables Optional array of plugin filenames to disable
+	 */
+	public function __construct( Array $disables = NULL) {
+		// Handle what was passed in
+		if ( is_array( $disables ) ) {
+			foreach ( $disables as $disable )
+				$this->disable( $disable );
+		}
 
-	echo "
-	<style type='text/css'>
-	.local-dev .notice {
-		float: left;
-		padding-left: 15px;
-		padding-top: 5px;		
-		margin: 0;
-		font-size: 15px;
-		font-weight: bold;
-		color: $env;
+		// Add the filter
+		add_filter( 'option_active_plugins', array( $this, 'do_disabling' ) );
+
+		// Allow other plugins to access this instance
+		self::$instance = $this;
 	}
 
-	</style>
-	";
+	/**
+	 * Adds a filename to the list of plugins to disable
+	 */
+	public function disable( $file ) {
+		$this->disabled[] = $file;
+	}
+
+	/**
+	 * Hooks in to the option_active_plugins filter and does the disabling
+	 * @param array $plugins WP-provided list of plugin filenames
+	 * @return array The filtered array of plugin filenames
+	 */
+	public function do_disabling( $plugins ) {
+		if ( count( $this->disabled ) ) {
+			foreach ( (array) $this->disabled as $plugin ) {
+				$key = array_search( $plugin, $plugins );
+				if ( false !== $key )
+					unset( $plugins[$key] );
+			}
+		}
+		return $plugins;
+	}
 }
 
-add_action( 'admin_head', 'admin_css' );
+if (defined('WPLDS_ENVIRONMENT') && WPLDS_ENVIRONMENT ) {
+
+	// Add admin notice
+	function environment_notice() {
+		$env_text = strtoupper(WPLDS_ENVIRONMENT);
+		echo "<p id='environment-notice'>$env_text SERVER</p>";
+	}
+
+	// Style the admin notice and admin bar
+	function environment_notice_css() {
+		// This makes sure that the positioning is also good for right-to-left languages
+		$x = is_rtl() ? 'left' : 'right';
+
+		if (defined( 'WPLDS_COLOR' ) && WPLDS_COLOR) {
+			$env_color = strtolower(WPLDS_COLOR);
+		} else {
+			$env_color = 'red';
+		}
+
+		echo "
+		<style type='text/css'>
+		#environment-notice {
+			float: $x;
+			padding-$x: 15px;
+			// padding-top: 5px;		
+			margin: 0;
+			font-size: 20px;
+			font-weight: bold;
+			color: $env_color;
+		}
+		#wpadminbar {
+			background-color: $env_color !important;
+		}
+
+		</style>
+		";
+	}
+
+	if (strtoupper(WPLDS_ENVIRONMENT) != 'LIVE' && strtoupper(WPLDS_ENVIRONMENT) != 'PRODUCTION') {
+		// EVERYTHING EXCEPT PRODUCTION/LIVE ENVIRONMENT
+
+		// To disable plugins:
+		new CWS_Disable_Plugins_When_Local_Dev( array( 'w3-total-cache/w3-total-cache.php', 'updraftplus/updraftplus.php', 'nginx-helper/nginx-helper.php', 'wpremote/plugin.php' ) );
+
+		// Hide from robots
+		add_filter( 'pre_option_blog_public', '__return_zero' );
+
+		// Add the environment to the admin panel
+		add_action( 'admin_notices', 'environment_notice' );
+
+		// Add CSS to admin and wp head
+		add_action( 'admin_head', 'environment_notice_css' );
+		add_action( 'wp_head', 'environment_notice_css' );
+
+	} else {
+		// PRODUCTION/LIVE ENVIRONMENT
+
+		// Add the environment to the admin panel
+		add_action( 'admin_notices', 'environment_notice' );
+
+		// Add CSS to admin and wp head
+		add_action( 'admin_head', 'environment_notice_css' );
+		add_action( 'wp_head', 'environment_notice_css' );
+	}
+}
 
 ?>
