@@ -24,3 +24,6 @@ define( 'WPLT_COLOR', 'green');
 
 define ('WPLT_DISABLED_PLUGINS', serialize ( array( 'w3-total-cache/w3-total-cache.php', 'updraftplus/updraftplus.php', 'nginx-helper/nginx-helper.php', 'wpremote/plugin.php' ) ));
 ```
+
+##Credit
+Plugin disabling from Mark Jaquith: https://gist.github.com/markjaquith/1044546
