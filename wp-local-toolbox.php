@@ -80,7 +80,7 @@ if (defined('WPLT_ENVIRONMENT') && WPLT_ENVIRONMENT ) {
 		}
 
 		echo "
-		<style type='text/css'>#wp-admin-bar-environment-notice>div,#wpadminbar{background-color:$env_color!important}#wp-admin-bar-environment-notice>div>span{color:#EEEFE6!important;font-size:20px!important}.ab-icon:before,.ab-item:before{color:#EEEFE6!important}</style>";
+		<style type='text/css'>#wp-admin-bar-environment-notice>div,#wpadminbar{background-color:$env_color!important}#wp-admin-bar-environment-notice>div>span{color:#EEEFE6!important;font-size:20px!important}.ab-icon:before,.ab-item:before,#adminbarsearch:before{color:#EEEFE6!important}</style>";
 	}
 
 	// Add the environment to the admin panel
