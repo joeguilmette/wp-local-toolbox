@@ -73,8 +73,8 @@ if (defined('WPLT_ENVIRONMENT') && WPLT_ENVIRONMENT ) {
 		echo "<p id='environment-notice'>$env_text SERVER</p>";
 	}
 
-	// Style the admin notice and admin bar
-	function environment_notice_css() {
+	// Style the admin notice and admin bar on the backend
+	function environment_notice_css_admin() {
 
 		if (defined( 'WPLT_COLOR' ) && WPLT_COLOR) {
 			$env_color = strtolower(WPLT_COLOR);
@@ -93,11 +93,26 @@ if (defined('WPLT_ENVIRONMENT') && WPLT_ENVIRONMENT ) {
 			font-weight: bold;
 			color: $env_color;
 		}
+		
 		#wpadminbar {
 			background-color: $env_color !important;
 		}
 
 		</style>
+		";
+	}
+
+	// Style the admin bar on the front end
+	function environment_notice_css_frontend() {
+
+		if (defined( 'WPLT_COLOR' ) && WPLT_COLOR) {
+			$env_color = strtolower(WPLT_COLOR);
+		} else {
+			$env_color = 'red';
+		}
+
+		echo "
+		<style type='text/css'> #wpadminbar { background-color: $env_color !important;} </style>
 		";
 	}
 
@@ -116,8 +131,8 @@ if (defined('WPLT_ENVIRONMENT') && WPLT_ENVIRONMENT ) {
 		add_action( 'admin_notices', 'environment_notice' );
 
 		// Add CSS to admin and wp head
-		add_action( 'admin_head', 'environment_notice_css' );
-		add_action( 'wp_head', 'environment_notice_css' );
+		add_action( 'admin_head', 'environment_notice_css_admin' );
+		add_action( 'wp_head', 'environment_notice_css_frontend' );
 
 	} else {
 		// PRODUCTION/LIVE ENVIRONMENT
@@ -126,8 +141,8 @@ if (defined('WPLT_ENVIRONMENT') && WPLT_ENVIRONMENT ) {
 		add_action( 'admin_notices', 'environment_notice' );
 
 		// Add CSS to admin and wp head
-		add_action( 'admin_head', 'environment_notice_css' );
-		add_action( 'wp_head', 'environment_notice_css' );
+		add_action( 'admin_head', 'environment_notice_css_admin' );
+		add_action( 'wp_head', 'environment_notice_css_frontend' );
 	}
 }
 
