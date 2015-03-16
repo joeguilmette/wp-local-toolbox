@@ -7,17 +7,7 @@ Version: 1.0
 Author URI: http://joeguilmette.com
 */
 
-/*
-We'll get $env from wp-config.php
-Then we'll choose a color and an admin notice based on $env
-Then we'll generate the admin notice and CSS based on $env
-
-Then we'll set the robots based on $env
-*/
-
-
-
-class CWS_Disable_Plugins_When_Local_Dev {
+class WPLT_Disable {
 	// Author: Mark Jaquith
 	// Author URI: http://coveredwebservices.com/
 	static $instance;
@@ -93,7 +83,7 @@ if (defined('WPLT_ENVIRONMENT') && WPLT_ENVIRONMENT ) {
 			font-weight: bold;
 			color: $env_color;
 		}
-		
+
 		#wpadminbar {
 			background-color: $env_color !important;
 		}
@@ -120,8 +110,8 @@ if (defined('WPLT_ENVIRONMENT') && WPLT_ENVIRONMENT ) {
 		// EVERYTHING EXCEPT PRODUCTION/LIVE ENVIRONMENT
 
 		// Disable plugins
-		if (defined('DISABLED_PLUGINS') && WPLT_DISABLED_PLUGINS ) {
-			new CWS_Disable_Plugins_When_Local_Dev( unserialize (WPLT_DISABLED_PLUGINS) );
+		if (defined('WPLT_DISABLED_PLUGINS') && WPLT_DISABLED_PLUGINS ) {
+			new WPLT_Disable( unserialize (WPLT_DISABLED_PLUGINS) );
 		}
 
 		// Hide from robots
@@ -136,6 +126,10 @@ if (defined('WPLT_ENVIRONMENT') && WPLT_ENVIRONMENT ) {
 
 	} else {
 		// PRODUCTION/LIVE ENVIRONMENT
+
+		if (defined('WPLT_DISABLED_PLUGINS') && WPLT_DISABLED_PLUGINS ) {
+			new WPLT_Disable( unserialize (WPLT_DISABLED_PLUGINS) );
+		}
 
 		// Add the environment to the admin panel
 		add_action( 'admin_notices', 'environment_notice' );
