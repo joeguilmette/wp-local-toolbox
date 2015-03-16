@@ -28,11 +28,6 @@ if (defined('WPLT_ENVIRONMENT') && WPLT_ENVIRONMENT ) {
 
 	}
 
-	// Disable plugins
-	if (defined('WPLT_DISABLED_PLUGINS') && WPLT_DISABLED_PLUGINS ) {
-		new WPLT_Disable( unserialize (WPLT_DISABLED_PLUGINS) );
-	}
-
 	// Add admin notice
 	function environment_notice() {
 		$env_text = strtoupper(WPLT_ENVIRONMENT);
@@ -65,6 +60,11 @@ if (defined('WPLT_ENVIRONMENT') && WPLT_ENVIRONMENT ) {
 	// Add CSS to admin and wp head
 	add_action( 'admin_head', 'environment_notice_css' );
 	add_action( 'wp_head', 'environment_notice_css' );
+}
+
+// Disable plugins regardless of environment
+if (defined('WPLT_DISABLED_PLUGINS') && WPLT_DISABLED_PLUGINS ) {
+	new WPLT_Disable( unserialize (WPLT_DISABLED_PLUGINS) );
 }
 
 // Plugin disabling engine

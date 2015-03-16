@@ -4,7 +4,7 @@ A simple plugin to set different defaults for production, staging, and local ser
 
 WP Local Toolbox uses three constants defined in wp-config.php:
 
-* **WPLT_ENVIRONMENT**: This is the name of your environment. If left undefined, the plugin will do nothing. 
+* **WPLT_ENVIRONMENT**: This is the name of your environment. If left undefined, the plugin will make no changes to the admin bar, but will still deactivate plugins as desired. 
 
 	If not defined as 'PRODUCTION' or 'LIVE', the plugin will enable 'Discourage search engines from indexing this site' to prevent your development and staging servers from being indexed. This option is not stored in the database, so your production server will still look to the actual setting on the Reading page.
 
