@@ -60,11 +60,18 @@ if (defined('WPLT_ENVIRONMENT') && WPLT_ENVIRONMENT ) {
 	// Add admin notice
 	function environment_notice() {
 		$env_text = strtoupper(WPLT_ENVIRONMENT);
-		echo "<p id='environment-notice'>$env_text SERVER</p>";
+
+		$admin_notice = array(
+			'parent'	=> 'top-secondary', // puts it on the right side.
+			'id'		=> 'environment-notice',
+			'title'		=> '<span>'.$env_text.' SERVER</span>',
+		);
+		global $wp_admin_bar;
+		$wp_admin_bar->add_menu($admin_notice);
 	}
 
-	// Style the admin notice and admin bar on the backend
-	function environment_notice_css_admin() {
+	// Style the admin bar
+	function environment_notice_css() {
 
 		if (defined( 'WPLT_COLOR' ) && WPLT_COLOR) {
 			$env_color = strtolower(WPLT_COLOR);
@@ -73,45 +80,18 @@ if (defined('WPLT_ENVIRONMENT') && WPLT_ENVIRONMENT ) {
 		}
 
 		echo "
-		<style type='text/css'>
-		#environment-notice {
-			float: right;
-			padding-right: 15px;
-			// padding-top: 5px;		
-			margin: 0;
-			font-size: 20px;
-			font-weight: bold;
-			color: $env_color;
-		}
-
-		#wpadminbar {
-			background-color: $env_color !important;
-		}
-
-		</style>
-		";
-	}
-
-	// Style the admin bar on the front end
-	function environment_notice_css_frontend() {
-
-		if (defined( 'WPLT_COLOR' ) && WPLT_COLOR) {
-			$env_color = strtolower(WPLT_COLOR);
-		} else {
-			$env_color = 'red';
-		}
-
-		echo "
-		<style type='text/css'> #wpadminbar { background-color: $env_color !important;} </style>
-		";
+		<style type='text/css'>#wp-admin-bar-environment-notice>div,#wpadminbar{background-color:$env_color!important}#wp-admin-bar-environment-notice>div>span{color:#EEEFE6!important;font-size:20px!important}.ab-icon:before,.ab-item:before{color:#EEEFE6!important}</style>";
 	}
 
 	// Add the environment to the admin panel
-	add_action( 'admin_notices', 'environment_notice' );
+	// add_action( 'admin_notices', 'environment_notice' );
+
+	add_action( 'admin_bar_menu', 'environment_notice' );
 
 	// Add CSS to admin and wp head
-	add_action( 'admin_head', 'environment_notice_css_admin' );
-	add_action( 'wp_head', 'environment_notice_css_frontend' );
+	add_action( 'admin_head', 'environment_notice_css' );
+	add_action( 'wp_head', 'environment_notice_css' );
+
 	if (defined('WPLT_DISABLED_PLUGINS') && WPLT_DISABLED_PLUGINS ) {
 		new WPLT_Disable( unserialize (WPLT_DISABLED_PLUGINS) );
 	}
