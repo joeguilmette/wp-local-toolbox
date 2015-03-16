@@ -1,4 +1,4 @@
-#WP Local Toolbox Readme
+#WP Local Toolbox
 
 A simple plugin to set different defaults for production, staging, and local servers.
 
@@ -12,8 +12,26 @@ WP Local Toolbox uses three constants defined in wp-config.php:
 
 * **WPLT_DISABLED_PLUGINS**: An array of plugins to disable. This does not store any data in the database, so plugins that are manually deactivated or activated will stay so when undefined in this constant.
 
+##Modification
 
-##Example:
+You can add code that will be executed depending on server environment by modifying the following in wp-local-toolbox.php.
+
+I'd love a pull request if you come up with something useful.
+
+```
+if (strtoupper(WPLT_ENVIRONMENT) != 'LIVE' && strtoupper(WPLT_ENVIRONMENT) != 'PRODUCTION') {
+	// Everything except PRODUCTION/LIVE Environment
+
+	// Hide from robots
+	add_filter( 'pre_option_blog_public', '__return_zero' );
+
+} else {
+	// PRODUCTION/LIVE Environment
+
+}
+```
+
+##Example
 
 ```
 define('WPLT_ENVIRONMENT', 'local');
