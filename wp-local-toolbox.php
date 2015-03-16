@@ -106,37 +106,25 @@ if (defined('WPLT_ENVIRONMENT') && WPLT_ENVIRONMENT ) {
 		";
 	}
 
+	// Add the environment to the admin panel
+	add_action( 'admin_notices', 'environment_notice' );
+
+	// Add CSS to admin and wp head
+	add_action( 'admin_head', 'environment_notice_css_admin' );
+	add_action( 'wp_head', 'environment_notice_css_frontend' );
+	if (defined('WPLT_DISABLED_PLUGINS') && WPLT_DISABLED_PLUGINS ) {
+		new WPLT_Disable( unserialize (WPLT_DISABLED_PLUGINS) );
+	}
+
 	if (strtoupper(WPLT_ENVIRONMENT) != 'LIVE' && strtoupper(WPLT_ENVIRONMENT) != 'PRODUCTION') {
 		// EVERYTHING EXCEPT PRODUCTION/LIVE ENVIRONMENT
-
-		// Disable plugins
-		if (defined('WPLT_DISABLED_PLUGINS') && WPLT_DISABLED_PLUGINS ) {
-			new WPLT_Disable( unserialize (WPLT_DISABLED_PLUGINS) );
-		}
 
 		// Hide from robots
 		add_filter( 'pre_option_blog_public', '__return_zero' );
 
-		// Add the environment to the admin panel
-		add_action( 'admin_notices', 'environment_notice' );
-
-		// Add CSS to admin and wp head
-		add_action( 'admin_head', 'environment_notice_css_admin' );
-		add_action( 'wp_head', 'environment_notice_css_frontend' );
-
 	} else {
 		// PRODUCTION/LIVE ENVIRONMENT
 
-		if (defined('WPLT_DISABLED_PLUGINS') && WPLT_DISABLED_PLUGINS ) {
-			new WPLT_Disable( unserialize (WPLT_DISABLED_PLUGINS) );
-		}
-
-		// Add the environment to the admin panel
-		add_action( 'admin_notices', 'environment_notice' );
-
-		// Add CSS to admin and wp head
-		add_action( 'admin_head', 'environment_notice_css_admin' );
-		add_action( 'wp_head', 'environment_notice_css_frontend' );
 	}
 }
 
