@@ -65,9 +65,9 @@ if (defined('WPLT_ENVIRONMENT') && WPLT_ENVIRONMENT ) {
 	// Add CSS to admin and wp head
 	add_action( 'admin_head', 'environment_notice_css' );
 	add_action( 'wp_head', 'environment_notice_css' );
-
 }
 
+// Plugin disabling engine
 class WPLT_Disable {
 	// Author: Mark Jaquith
 	// Author URI: http://coveredwebservices.com/
