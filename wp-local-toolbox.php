@@ -52,7 +52,7 @@ if (defined('WPLT_ENVIRONMENT') && WPLT_ENVIRONMENT ) {
 			if ($env == 'LIVE' or $env == 'PRODUCTION') {
 				$env_color = 'red';
 			} elseif ($env == 'STAGING' or $env == 'TESTING') {
-				$env_color = 'orange';
+				$env_color = '#FD9300';
 			} elseif ($env == 'LOCAL' or $env == 'DEVELOPMENT') {
 				$env_color = 'green';
 			} else {
