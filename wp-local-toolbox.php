@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: WP Local Toolbox
+Plugin SERVER: WP Local Toolbox
 Description: A simple plugin to set different defaults for production, staging and local servers.
 Author: Joe Guilmette
 Version: 1.0
@@ -9,17 +9,16 @@ Author URI: http://joeguilmette.com
 
 defined('ABSPATH') or die("Oops.");
 
-if (defined('WPLT_ENVIRONMENT') && WPLT_ENVIRONMENT ) {
-
+if (defined('WPLT_SERVER') && WPLT_SERVER ) {
 	/*
 	You can edit this to do certain things depending on your how you've
-	defined the WPLT_ENVIRONMENT constant. This can be very useful if
+	defined the WPLT_SERVER constant. This can be very useful if
 	you want to perform certain actions depending on which server you're
 	using. 
 
 	If you come up with something cool I'd love a pull request!
 	*/ 
-	if (strtoupper(WPLT_ENVIRONMENT) != 'LIVE' && strtoupper(WPLT_ENVIRONMENT) != 'PRODUCTION') {
+	if (strtoupper(WPLT_SERVER) != 'LIVE' && strtoupper(WPLT_SERVER) != 'PRODUCTION') {
 		// Everything except PRODUCTION/LIVE Environment
 
 		// Hide from robots
@@ -32,7 +31,7 @@ if (defined('WPLT_ENVIRONMENT') && WPLT_ENVIRONMENT ) {
 
 	// Add admin notice
 	function environment_notice() {
-		$env_text = strtoupper(WPLT_ENVIRONMENT);
+		$env_text = strtoupper(WPLT_SERVER);
 
 		$admin_notice = array(
 			'parent'	=> 'top-secondary', // puts it on the right side.
@@ -64,7 +63,7 @@ if (defined('WPLT_ENVIRONMENT') && WPLT_ENVIRONMENT ) {
 	add_action( 'wp_head', 'environment_notice_css' );
 
 	//I literally can't even
-	function replace_howdy( $wp_admin_bar ) {
+	function goodbye_howdy( $wp_admin_bar ) {
 		$my_account=$wp_admin_bar->get_node('my-account');
 		$newtitle = str_replace( 'Howdy,', '', $my_account->title );
 		$wp_admin_bar->add_node( array(
@@ -72,16 +71,16 @@ if (defined('WPLT_ENVIRONMENT') && WPLT_ENVIRONMENT ) {
 			'title' => $newtitle,
 		) );
 	}
-	add_filter( 'admin_bar_menu', 'replace_howdy',25 );
+	add_filter( 'admin_bar_menu', 'goodbye_howdy',25 );
 }
 
 // Disable plugins regardless of environment
 if (defined('WPLT_DISABLED_PLUGINS') && WPLT_DISABLED_PLUGINS ) {
-	new WPLT_Disable( unserialize (WPLT_DISABLED_PLUGINS) );
+	new WPLT_DISABLE( unserialize (WPLT_DISABLED_PLUGINS) );
 }
 
 // Plugin disabling engine
-class WPLT_Disable {
+class WPLT_DISABLE {
 	// Author: Mark Jaquith
 	// Author URI: http://coveredwebservices.com/
 	static $instance;
@@ -89,7 +88,7 @@ class WPLT_Disable {
 
 	/**
 	 * Sets up the options filter, and optionally handles an array of plugins to disable
-	 * @param array $disables Optional array of plugin filenames to disable
+	 * @param array $disables Optional array of plugin fileSERVERs to disable
 	 */
 	public function __construct( Array $disables = NULL) {
 		// Handle what was passed in
@@ -106,7 +105,7 @@ class WPLT_Disable {
 	}
 
 	/**
-	 * Adds a filename to the list of plugins to disable
+	 * Adds a fileSERVER to the list of plugins to disable
 	 */
 	public function disable( $file ) {
 		$this->disabled[] = $file;
@@ -114,8 +113,8 @@ class WPLT_Disable {
 
 	/**
 	 * Hooks in to the option_active_plugins filter and does the disabling
-	 * @param array $plugins WP-provided list of plugin filenames
-	 * @return array The filtered array of plugin filenames
+	 * @param array $plugins WP-provided list of plugin fileSERVERs
+	 * @return array The filtered array of plugin fileSERVERs
 	 */
 	public function do_disabling( $plugins ) {
 		if ( count( $this->disabled ) ) {
