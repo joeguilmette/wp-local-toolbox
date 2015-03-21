@@ -41,5 +41,11 @@ define('WPLT_COLOR', 'green');
 define('WPLT_DISABLED_PLUGINS', serialize(array( 'w3-total-cache/w3-total-cache.php', 'updraftplus/updraftplus.php', 'nginx-helper/nginx-helper.php', 'wpremote/plugin.php' )));
 ```
 
+##Notes
+
+As a special thank you, this plugin will remove the ridiculous `Howdy, ` that is prepended to the username in the admin bar.
+
+You're welcome.
+
 ##Credit
 Plugin disabling from Mark Jaquith: https://gist.github.com/markjaquith/1044546

@@ -7,6 +7,8 @@ Version: 1.0
 Author URI: http://joeguilmette.com
 */
 
+defined('ABSPATH') or die("Oops.");
+
 if (defined('WPLT_ENVIRONMENT') && WPLT_ENVIRONMENT ) {
 
 	/*
@@ -60,6 +62,17 @@ if (defined('WPLT_ENVIRONMENT') && WPLT_ENVIRONMENT ) {
 	// Add CSS to admin and wp head
 	add_action( 'admin_head', 'environment_notice_css' );
 	add_action( 'wp_head', 'environment_notice_css' );
+
+	//I literally can't even
+	function replace_howdy( $wp_admin_bar ) {
+		$my_account=$wp_admin_bar->get_node('my-account');
+		$newtitle = str_replace( 'Howdy,', '', $my_account->title );
+		$wp_admin_bar->add_node( array(
+			'id' => 'my-account',
+			'title' => $newtitle,
+		) );
+	}
+	add_filter( 'admin_bar_menu', 'replace_howdy',25 );
 }
 
 // Disable plugins regardless of environment
