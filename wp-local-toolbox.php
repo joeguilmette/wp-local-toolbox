@@ -48,7 +48,18 @@ if (defined('WPLT_SERVER') && WPLT_SERVER ) {
 		if (defined( 'WPLT_COLOR' ) && WPLT_COLOR) {
 			$env_color = strtolower(WPLT_COLOR);
 		} else {
-			$env_color = 'red';
+			$env = strtoupper(WPLT_ENVIRONMENT);
+
+			if ($env == 'LIVE' or $env == 'PRODUCTION') {
+				$env_color = 'red';
+			} elseif ($env == 'STAGING' or $env == 'TESTING') {
+				$env_color = '#FD9300';
+			} elseif ($env == 'LOCAL' or $env == 'DEVELOPMENT') {
+				$env_color = 'green';
+			} else {
+				$env_color = 'red';
+			}
+			
 		}
 
 		echo "
