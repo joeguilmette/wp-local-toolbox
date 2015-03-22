@@ -1,13 +1,11 @@
 <?php
 /*
-Plugin SERVER: WP Local Toolbox
+Plugin Name: WP Local Toolbox
 Description: A simple plugin to set different defaults for production, staging and local servers.
 Author: Joe Guilmette
 Version: 1.0
 Author URI: http://joeguilmette.com
 */
-
-defined('ABSPATH') or die("Oops.");
 
 if (defined('WPLT_SERVER') && WPLT_SERVER ) {
 	/*
