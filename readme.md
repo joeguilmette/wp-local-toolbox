@@ -60,6 +60,7 @@ You're welcome.
 ##Credit
 
 * Plugin disabling from Mark Jaquith: https://gist.github.com/markjaquith/1044546
-	Using this fork: https://gist.github.com/Rarst/4402927
+
+	* Using this fork: https://gist.github.com/Rarst/4402927
 
 * Airplane Mode from Andrew Norcross: https://github.com/norcross/airplane-mode
