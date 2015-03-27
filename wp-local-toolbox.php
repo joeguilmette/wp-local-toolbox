@@ -138,9 +138,6 @@ class WPLT_AIRPLANE {
 		add_action( 'airplane_mode_status_change',  array( $this, 'purge_transients'     )        );
 		// settings
 		add_action( 'admin_bar_menu',               array( $this, 'admin_bar_toggle'     ), 9999  );
-		add_action( 'wp_enqueue_scripts',           array( $this, 'toggle_css'           ), 9999  );
-		add_action( 'admin_enqueue_scripts',        array( $this, 'toggle_css'           ), 9999  );
-		add_action( 'login_enqueue_scripts',        array( $this, 'toggle_css'           ), 9999  );
 		// keep jetpack from attempting external requests
 		if ( $this->enabled() ) {
 			add_filter( 'jetpack_development_mode', '__return_true', 9999 );
