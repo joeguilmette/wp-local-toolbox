@@ -1,10 +1,10 @@
 #WP Local Toolbox
 
-Through constants defined in wp-config, you can disable plugins, set search engine visibility, display the server name and change the color of the admin bar, or literally anything else you can think of.
+Through constants defined in wp-config, you can disable plugins, disable the  loading of external files, set search engine visibility, display the server name and change the color of the admin bar, or literally anything else you can think of.
 
 This is an invaluable tool if you often work in production, staging, and local servers at the same time. 
 
-WP Local Toolbox uses three constants defined in wp-config.php:
+WP Local Toolbox uses the following constants defined in wp-config.php:
 
 * **WPLT_SERVER**: This is the name of your server environment. It will be displayed in the admin bar at browser widths greater than 1030px. If left undefined, the plugin will make no changes to the admin bar. 
 
