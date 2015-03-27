@@ -64,18 +64,25 @@ if (defined('WPLT_SERVER') && WPLT_SERVER ) {
 		}
 
 		echo "
-		<!-- WPLT Admin Bar Notice -->
-		<style type='text/css'>#wp-admin-bar-environment-notice>div,#wpadminbar{background-color:$env_color!important}#wp-admin-bar-environment-notice{display:none}@media only screen and (min-width:1030px){#wp-admin-bar-environment-notice{display:block}#wp-admin-bar-environment-notice>div>span{color:#EEEFE6!important;font-size:20px!important}}#adminbarsearch:before,.ab-icon:before,.ab-item:before{color:#EEEFE6!important}</style>";
+<!-- WPLT Admin Bar Notice -->
+<style type='text/css'>
+	#wp-admin-bar-environment-notice>div,
+	#wpadminbar { background-color: $env_color!important }
+	#wp-admin-bar-environment-notice { display: none }
+	@media only screen and (min-width:1030px) { 
+	    #wp-admin-bar-environment-notice { display: block }
+	    #wp-admin-bar-environment-notice>div>span {
+	        color: #EEE!important;
+	        font-size: 20px!important;
+	    }
+	}
+	#adminbarsearch:before,
+	.ab-icon:before,
+	.ab-item:before { color: #EEE!important }
+</style>";
 	}
 
-	// Add the environment to the admin panel
-	add_action( 'admin_bar_menu', 'environment_notice' );
-
-	// Add CSS to admin and wp head
-	add_action( 'admin_head', 'environment_notice_css' );
-	add_action( 'wp_head', 'environment_notice_css' );
-
-	//I literally can't even
+	// I literally can't even
 	function goodbye_howdy( $wp_admin_bar ) {
 		$my_account=$wp_admin_bar->get_node('my-account');
 		$newtitle = str_replace( 'Howdy,', '', $my_account->title );
@@ -84,16 +91,26 @@ if (defined('WPLT_SERVER') && WPLT_SERVER ) {
 			'title' => $newtitle,
 		) );
 	}
-	add_filter( 'admin_bar_menu', 'goodbye_howdy',25 );
+	
+	function wplt_server_init() {
+		if ( is_admin_bar_showing() ) {
+			// Add the environment to the admin panel
+			add_action( 'admin_bar_menu', 'environment_notice' );
+
+			// Add CSS to admin and wp head
+			add_action( 'admin_head', 'environment_notice_css' );
+			add_action( 'wp_head', 'environment_notice_css' );
+
+			// Nope
+			add_filter( 'admin_bar_menu', 'goodbye_howdy',25 );
+		}
+	}
+	add_action('init', 'wplt_server_init');
 }
 
 // Airplane Mode regardless of environment
 if (defined('WPLT_AIRPLANE') && WPLT_AIRPLANE ) {
-	echo "
-	<!-- WPLT Airplane Mode -->
-	
-	<style>#wp-admin-bar-airplane-mode-toggle span.airplane-http-count{position:relative;display:inline-block;width:21px;height:21px;line-height:21px;margin-left:3px;border-radius:50%;border:2px solid #eee;text-align:center}#wp-admin-bar-airplane-mode-toggle span.airplane-toggle-icon{padding-right:3px}#wp-admin-bar-airplane-mode-toggle span.airplane-toggle-icon-on:before{content:'✓'}#wp-admin-bar-airplane-mode-toggle span.airplane-toggle-icon-off:before{content:'✗'}</style>";
-	
+
 	// Airplane Mode
 	if( ! defined( 'AIRMDE_BASE ' ) ) {
 		define( 'AIRMDE_BASE', plugin_basename(__FILE__) );
@@ -106,6 +123,31 @@ if (defined('WPLT_AIRPLANE') && WPLT_AIRPLANE ) {
 	}
 	// Instantiate our class
 	$Airplane_Mode_Core = WPLT_AIRPLANE::getInstance();
+
+	function wplt_airplane_css() {
+		if ( is_admin_bar_showing() ) {
+			echo "
+<!-- WPLT Airplane Mode -->
+<style type='text/css'>
+	#wp-admin-bar-airplane-mode-toggle span.airplane-http-count {
+	    position: relative;
+	    display: inline-block;
+	    width: 21px;
+	    height: 21px;
+	    line-height: 21px;
+	    margin-left: 3px;
+	    border-radius: 50%;
+	    border: 2px solid #EEE;
+	    text-align: center;
+	}
+	#wp-admin-bar-airplane-mode-toggle span.airplane-toggle-icon { padding-right: 3px }
+	#wp-admin-bar-airplane-mode-toggle span.airplane-toggle-icon-on:before { content: '✓' }
+	#wp-admin-bar-airplane-mode-toggle span.airplane-toggle-icon-off:before { content: '✗' }
+</style>";
+		}
+	}
+
+	add_action('wp_head', 'wplt_airplane_css');
 }
 
 
