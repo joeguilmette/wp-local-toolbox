@@ -20,6 +20,8 @@ WP Local Toolbox uses the following constants defined in wp-config.php:
 
 * **WPLT_AIRPLANE**: Control loading of external files when developing locally. WP loads certain external files (fonts, gravatar, etc) and makes external HTTP calls. This isn't usually an issue, unless you're working in an evironment without a web connection. This plugin removes / unhooks those actions to reduce load time and avoid errors due to missing files.
 
+	On and Off: Can be toggled from the admin bar by clicking 'Airplane Mode'. A ✗ or ✓ will indicate if Airplane Mode is enabled or disabled. The number of HTTP requests either allowed or disabled is displayed to the right of the 'Airplane Mode' button.
+
 ##Modification
 
 You can add code that will be executed depending on server name by modifying the following in wp-local-toolbox.php.
@@ -57,6 +59,8 @@ As a special thank you, this plugin will remove the ridiculous `Howdy, ` that is
 
 You're welcome.
 
+The HTTP count may or may not be accurate.
+
 ##Credit
 
 * Plugin disabling from Mark Jaquith: https://gist.github.com/markjaquith/1044546
@@ -64,3 +68,5 @@ You're welcome.
 	* Using this fork: https://gist.github.com/Rarst/4402927
 
 * Airplane Mode from Andrew Norcross: https://github.com/norcross/airplane-mode
+
+	* HTTP count from this pull request: https://github.com/norcross/airplane-mode/pull/41

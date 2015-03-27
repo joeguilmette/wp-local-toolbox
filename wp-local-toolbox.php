@@ -91,7 +91,8 @@ if (defined('WPLT_SERVER') && WPLT_SERVER ) {
 if (defined('WPLT_AIRPLANE') && WPLT_AIRPLANE ) {
 	echo "
 	<!-- WPLT Airplane Mode -->
-	<style>#wp-admin-bar-airplane-mode-toggle span.airplane-toggle-icon{padding-right:3px}#wp-admin-bar-airplane-mode-toggle span.airplane-toggle-icon-on:before{content:'✓'}#wp-admin-bar-airplane-mode-toggle span.airplane-toggle-icon-off:before{content:'✗'}</style>";
+	
+	<style>#wp-admin-bar-airplane-mode-toggle span.airplane-http-count{position:relative;display:inline-block;width:21px;height:21px;line-height:21px;margin-left:3px;border-radius:50%;border:2px solid #eee;text-align:center}#wp-admin-bar-airplane-mode-toggle span.airplane-toggle-icon{padding-right:3px}#wp-admin-bar-airplane-mode-toggle span.airplane-toggle-icon-on:before{content:'✓'}#wp-admin-bar-airplane-mode-toggle span.airplane-toggle-icon-off:before{content:'✗'}</style>";
 	
 	// Airplane Mode
 	if( ! defined( 'AIRMDE_BASE ' ) ) {
@@ -119,6 +120,11 @@ class WPLT_AIRPLANE {
 	 */
 	static $instance = false;
 	/**
+	 * Number of HTTP requests
+	 * @var $http_count
+	 */
+	private $http_count = 0;
+	/**
 	 * this is our constructor.
 	 * there are many like it, but this one is mine
 	 */
@@ -144,6 +150,7 @@ class WPLT_AIRPLANE {
 		}
 		register_activation_hook( __FILE__,         array( $this, 'create_setting'       )        );
 		register_deactivation_hook( __FILE__,       array( $this, 'remove_setting'       )        );
+		add_action( 'airplane_mode_http_args',      array( $this, 'count_http_requests'  ), 0, 0  );
 	}
 	/**
 	 * If an instance exists, this returns it.  If not, it creates one and
@@ -288,7 +295,7 @@ class WPLT_AIRPLANE {
 		}
 		// swap out the file for a base64 encoded image
 		$image  = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
-		$avatar = "<img alt='{$alt}' src='{$image}' class='avatar avatar-{$size} photo' height='{$size}' width='{$size}' style='background:#eee;' />";
+		$avatar = "<img alt='{$alt}' src='{$image}' class='avatar avatar-{$size} photo' height='{$size}' width='{$size}' style='background:#EEEFE6;' />";
 		// return the item
 		return $avatar;
 	}
@@ -404,13 +411,15 @@ class WPLT_AIRPLANE {
 		$text = __( 'Airplane Mode', 'airplane-mode' );
 		// get my icon
 		$icon = '<span class="airplane-toggle-icon ' . sanitize_html_class( $class ) . '"></span>';
+		// HTTP request count
+		$count = '<span class="airplane-http-count">' . $this->http_count . '</span>';
 		// get our link with the status parameter
 		$link = wp_nonce_url( add_query_arg( 'airplane-mode', $toggle ), 'airmde_nonce', 'airmde_nonce' );
 		// now add the admin bar link
 		$wp_admin_bar->add_menu(
 			array(
 				'id'        => 'airplane-mode-toggle',
-				'title'     => $icon . $text,
+				'title'     => $icon . $text. $count,
 				'href'      => esc_url( $link ),
 				'position'  => 0,
 				'meta'      => array(
@@ -445,6 +454,14 @@ class WPLT_AIRPLANE {
 			delete_site_transient( 'update_plugins' );
 			delete_site_transient( 'update_themes' );
 		}
+	}
+	/**
+	 * Increase HTTP request counter by one.
+	 *
+	 * @return null
+	 */
+	public function count_http_requests() {
+		$this->http_count++;
 	}
 /// end class
 }
