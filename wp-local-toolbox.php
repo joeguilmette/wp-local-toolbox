@@ -137,6 +137,7 @@ if (defined('WPLT_AIRPLANE') && WPLT_AIRPLANE ) {
 	}
 
 	add_action('wp_head', 'wplt_airplane_css');
+	add_action( 'admin_head', 'wplt_airplane_css' );
 }
 
 
