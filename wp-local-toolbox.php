@@ -129,8 +129,8 @@ if (defined('WPLT_NOTIFY') && WPLT_NOTIFY ) {
 		// Send email to admin.
 		wp_mail( WPLT_NOTIFY, $subject, $message );
 	}
+	add_action( 'save_post', 'notify_on_post_update' );
 }
-add_action( 'save_post', 'notify_on_post_update' );
 
 // 
 // Airplane Mode regardless of environment
