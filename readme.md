@@ -18,6 +18,8 @@ WP Local Toolbox uses the following constants defined in wp-config.php:
 
 * **WPLT_DISABLED_PLUGINS**: An array of plugins to disable. This does not store any data in the database, so plugins that are manually deactivated or activated will stay so when undefined in this constant.
 
+* **WPLT_NOTIFY**: Define this constant as the email address where you'd like to be notified of post updates. Helpful in production to see if a client has submitted a new post, or in development to see if data is being added to the staging environment so you know to pull before pushing. Especially helpful when combined with APIs like Zapier.
+
 * **WPLT_AIRPLANE**: Control loading of external files when developing locally. WP loads certain external files (fonts, gravatar, etc) and makes external HTTP calls. This isn't usually an issue, unless you're working in an evironment without a web connection. This plugin removes / unhooks those actions to reduce load time and avoid errors due to missing files.
 
 	On and Off: Can be toggled from the admin bar by clicking 'Airplane Mode'. A ✗ or ✓ will indicate if Airplane Mode is enabled or disabled. 

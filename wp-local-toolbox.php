@@ -5,6 +5,7 @@ Description: A simple plugin to set different defaults for production, staging a
 Author: Joe Guilmette
 Version: 1.0
 Author URI: http://joeguilmette.com
+Plugin URI: https://github.com/joeguilmette/wp-local-toolbox
 */
 
 if (defined('WPLT_SERVER') && WPLT_SERVER ) {
@@ -108,7 +109,33 @@ if (defined('WPLT_SERVER') && WPLT_SERVER ) {
 	add_action('init', 'wplt_server_init');
 }
 
+// 
+// Get notified of post changes
+// 
+
+if (defined('WPLT_NOTIFY') && WPLT_NOTIFY ) {
+	function notify_on_post_update( $post_id ) {
+
+		// If this is a revision, get real post ID
+		if ( $parent_id = wp_is_post_revision( $post_id ) ) 
+			$post_id = $parent_id;
+
+		$post_title = get_the_title( $post_id );
+		$post_url = get_permalink( $post_id );
+		$author = the_modified_author();
+		$subject = get_bloginfo('name') . ': A post has been updated.';
+		$message = $post_title . " (" . $post_url . ") has been updated by " . $author;
+
+		// Send email to admin.
+		wp_mail( WPLT_NOTIFY, $subject, $message );
+	}
+}
+add_action( 'save_post', 'notify_on_post_update' );
+
+// 
 // Airplane Mode regardless of environment
+// 
+
 if (defined('WPLT_AIRPLANE') && WPLT_AIRPLANE ) {
 
 	// Airplane Mode
