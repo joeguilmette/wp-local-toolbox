@@ -53,6 +53,8 @@ define('WPLT_COLOR', 'purple');
 define('WPLT_DISABLED_PLUGINS', serialize(array( 'w3-total-cache/w3-total-cache.php', 'updraftplus/updraftplus.php', 'nginx-helper/nginx-helper.php', 'wpremote/plugin.php' )));
 
 define('WPLT_AIRPLANE', 'true');
+
+define('WPLT_NOTIFY','wplt.4jr8a@zapiermail.com')
 ```
 
 ##Notes
