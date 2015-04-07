@@ -122,9 +122,9 @@ if (defined('WPLT_NOTIFY') && WPLT_NOTIFY ) {
 
 		$post_title = get_the_title( $post_id );
 		$post_url = get_permalink( $post_id );
-		$author = the_modified_author();
+		$author = the_modified_author( $post_id );
 		$subject = get_bloginfo('name') . ': A post has been updated.';
-		$message = $post_title . " (" . $post_url . ") has been updated by " . $author;
+		$message = "The page '" . $post_title . "'' (" . $post_url . ") has been updated by " . $author;
 
 		// Send email to admin.
 		wp_mail( WPLT_NOTIFY, $subject, $message );
