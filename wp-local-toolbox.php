@@ -116,18 +116,17 @@ if (defined('WPLT_SERVER') && WPLT_SERVER ) {
 if (defined('WPLT_NOTIFY') && WPLT_NOTIFY ) {
 	function notify_on_post_update( $post_id ) {
 
-		// If this is just a revision, don't send the email.
-		if ( wp_is_post_revision( $post_id ) )
-			return;
+		// Only send if post is published
+		if ( get_post_status( $post_id ) == 'publish' ) {
+			$post_title = get_the_title( $post_id );
+			$post_url = get_permalink( $post_id );
+			$author = get_the_modified_author( $post_id );
+			$subject = get_bloginfo('name') . ': A post has been updated.';
+			$message = "The page '" . $post_title . "' (" . $post_url . ") has been updated by " . $author . ".";
 
-		$post_title = get_the_title( $post_id );
-		$post_url = get_permalink( $post_id );
-		$author = get_the_modified_author( $post_id );
-		$subject = get_bloginfo('name') . ': A post has been updated.';
-		$message = "The page '" . $post_title . "' (" . $post_url . ") has been updated by " . $author . ".";
-
-		// Send email to admin.
-		wp_mail( WPLT_NOTIFY, $subject, $message );
+			// Send email to admin.
+			wp_mail( WPLT_NOTIFY, $subject, $message );
+		}
 	}
 	add_action( 'save_post', 'notify_on_post_update' );
 }
