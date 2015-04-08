@@ -18,22 +18,27 @@ if (defined('WPLT_SERVER') && WPLT_SERVER ) {
 	If you come up with something cool I'd love a pull request!
 	*/ 
 	if (strtoupper(WPLT_SERVER) != 'LIVE' && strtoupper(WPLT_SERVER) != 'PRODUCTION') {
-		// Everything except PRODUCTION/LIVE Environment
-
-		// Hide from robots
+		/** 
+		 * Everything except PRODUCTION/LIVE Environment
+		 * 
+		 * Hide from robots
+		 */
 		add_filter( 'pre_option_blog_public', '__return_zero' );
 
 	} else {
-		// PRODUCTION/LIVE Environment
-
+		/** 
+		 * PRODUCTION/LIVE Environment
+		 */
 	}
 
-	// Add admin notice
+	/** 
+	 * Add admin notice
+	 */
 	function environment_notice() {
 		$env_text = strtoupper(WPLT_SERVER);
 
 		$admin_notice = array(
-			'parent'	=> 'top-secondary', // puts it on the right side.
+			'parent'	=> 'top-secondary', /** puts it on the right side. */
 			'id'		=> 'environment-notice',
 			'title'		=> '<span>'.$env_text.' SERVER</span>',
 		);
@@ -41,7 +46,9 @@ if (defined('WPLT_SERVER') && WPLT_SERVER ) {
 		$wp_admin_bar->add_menu($admin_notice);
 	}
 
-	// Style the admin bar
+	/** 
+	 * Style the admin bar
+	 */
 	function environment_notice_css() {
 
 		if (defined( 'WPLT_COLOR' ) && WPLT_COLOR) {
@@ -63,7 +70,12 @@ if (defined('WPLT_SERVER') && WPLT_SERVER ) {
 			}
 			
 		}
-
+/**
+ * Some nice readable CSS so no one wonder's what's going on
+ * when inspecting the head. I think it's best to just jack 
+ * these styles into the head and not bother loading another
+ * stylesheet.
+ */
 		echo "
 <!-- WPLT Admin Bar Notice -->
 <style type='text/css'>
@@ -83,7 +95,9 @@ if (defined('WPLT_SERVER') && WPLT_SERVER ) {
 </style>";
 	}
 
-	// I literally can't even
+	/** 
+	 * I literally can't even
+	 */
 	function goodbye_howdy( $wp_admin_bar ) {
 		$my_account=$wp_admin_bar->get_node('my-account');
 		$newtitle = str_replace( 'Howdy,', '', $my_account->title );
@@ -95,28 +109,36 @@ if (defined('WPLT_SERVER') && WPLT_SERVER ) {
 	
 	function wplt_server_init() {
 		if ( is_admin_bar_showing() ) {
-			// Add the environment to the admin panel
+			/** 
+			 * Add the environment to the admin panel
+			 */
 			add_action( 'admin_bar_menu', 'environment_notice' );
 
-			// Add CSS to admin and wp head
+			/** 
+			 * Add CSS to admin and wp head
+			 */
 			add_action( 'admin_head', 'environment_notice_css' );
 			add_action( 'wp_head', 'environment_notice_css' );
 
-			// Nope
+			/** 
+			 * Cannot. Even.
+			 */
 			add_filter( 'admin_bar_menu', 'goodbye_howdy',25 );
 		}
 	}
 	add_action('init', 'wplt_server_init');
 }
 
-// 
-// Get notified of post changes
-// 
+/** 
+ * Get notified of post changes
+ */
 
 if (defined('WPLT_NOTIFY') && WPLT_NOTIFY ) {
 	function notify_on_post_update( $post_id ) {
 
-		// Only send if post is published
+		/** 
+		 * Only send if post is published
+		 */
 		if ( get_post_status( $post_id ) == 'publish' ) {
 			$post_title = get_the_title( $post_id );
 			$post_url = get_permalink( $post_id );
@@ -124,20 +146,24 @@ if (defined('WPLT_NOTIFY') && WPLT_NOTIFY ) {
 			$subject = get_bloginfo('name') . ': A post has been updated.';
 			$message = "The page '" . $post_title . "' (" . $post_url . ") has been updated by " . $author . ".";
 
-			// Send email to admin.
+			/** 
+			 * Send email to admin.
+			 */
 			wp_mail( WPLT_NOTIFY, $subject, $message );
 		}
 	}
 	add_action( 'save_post', 'notify_on_post_update' );
 }
 
-// 
-// Airplane Mode regardless of environment
-// 
+/** 
+ * Airplane Mode regardless of environment
+ */
 
 if (defined('WPLT_AIRPLANE') && WPLT_AIRPLANE ) {
 
-	// Airplane Mode
+	/** 
+	 * Airplane Mode
+	 */
 	if( ! defined( 'AIRMDE_BASE ' ) ) {
 		define( 'AIRMDE_BASE', plugin_basename(__FILE__) );
 	}
@@ -147,7 +173,10 @@ if (defined('WPLT_AIRPLANE') && WPLT_AIRPLANE ) {
 	if( ! defined( 'AIRMDE_VER' ) ) {
 		define( 'AIRMDE_VER', '0.0.1' );
 	}
-	// Instantiate our class
+	/** 
+	 * [$Airplane_Mode_Core description]
+	 * @var [type]
+	 */
 	$Airplane_Mode_Core = WPLT_AIRPLANE::getInstance();
 
 	function wplt_airplane_css() {
@@ -168,11 +197,12 @@ if (defined('WPLT_AIRPLANE') && WPLT_AIRPLANE ) {
 
 
 class WPLT_AIRPLANE {
-	// Airplane Mode engine
-	// Author: Andrew Norcross
-	// Author URI: http://reaktivstudios.com/
-	// Plugin URI: https://github.com/norcross/airplane-mode
-	/**
+	/** 
+	 * Airplane Mode engine
+	 * Author: Andrew Norcross
+	 * Author URI: http://reaktivstudios.com/
+	 * Plugin URI: https://github.com/norcross/airplane-mode
+	 * 
 	 * Static property to hold our singleton instance
 	 * @var $instance
 	 */
@@ -189,15 +219,25 @@ class WPLT_AIRPLANE {
 		add_filter( 'get_avatar',                   array( $this, 'replace_gravatar'     ), 1,  5 );
 		add_filter( 'map_meta_cap',                 array( $this, 'prevent_auto_updates' ), 10, 2 );
 		add_filter( 'default_avatar_select',        array( $this, 'default_avatar'       )        );
-		// kill all the http requests
+		/** 
+		 * kill all the http requests
+		 */
 		add_filter( 'pre_http_request',             array( $this, 'disable_http_reqs'    ), 10, 3 );
-		// check for our query string and handle accordingly
+		/** 
+		 * check for our query string and handle accordingly
+		 */
 		add_action( 'init',                         array( $this, 'toggle_check'         )        );
-		// check for status change and purge transients as needed
+		/** 
+		 * check for status change and purge transients as needed
+		 */
 		add_action( 'airplane_mode_status_change',  array( $this, 'purge_transients'     )        );
-		// settings
+		/** 
+		 * settings
+		 */
 		add_action( 'admin_bar_menu',               array( $this, 'admin_bar_toggle'     ), 9999  );
-		// keep jetpack from attempting external requests
+		/** 
+		 * keep jetpack from attempting external requests
+		 */
 		if ( $this->enabled() ) {
 			add_filter( 'jetpack_development_mode', '__return_true', 9999 );
 		}
@@ -246,7 +286,9 @@ class WPLT_AIRPLANE {
 		if ( defined( 'WP_CLI' ) and WP_CLI ) {
 			return false;
 		}
-		// pull our status from the options table
+		/** 
+		 * pull our status from the options table
+		 */ 
 		$option = get_site_option( 'airplane-mode' );
 		if ( false === $option ) {
 			$option = get_option( 'airplane-mode' );
@@ -261,24 +303,36 @@ class WPLT_AIRPLANE {
 	 * @return WP_Styles $styles The same object with Open Sans 'src' set to null.
 	 */
 	public function block_style_load( WP_Styles $styles ) {
-		// bail if disabled
+		/** 
+		 * bail if disabled
+		 */
 		if ( ! $this->enabled() ) {
 			return $styles;
 		}
-		// make sure we have something registered first
+		/** 
+		 * make sure we have something registered first
+		 */
 		if ( ! isset( $styles->registered ) ) {
 			return $styles;
 		}
-		// fetch our registered styles
+		/** 
+		 * fetch our registered styles
+		 */
 		$registered = $styles->registered;
-		// pass the entire set of registered data to the action to allow a bypass
+		/** 
+		 * pass the entire set of registered data to the action to allow a bypass
+		 */
 		do_action( 'airplane_mode_style_load', $registered );
-		// fetch our open sans if present and set the src inside the object to null
+		/** 
+		 * fetch our open sans if present and set the src inside the object to null
+		 */
 		if ( ! empty( $registered['open-sans'] ) ) {
 			$open_sans = $registered['open-sans'];
 			$open_sans->src = null;
 		}
-		// send it back
+		/** 
+		 * send it back
+		 */
 		return $styles;
 	}
 	/**
@@ -289,24 +343,33 @@ class WPLT_AIRPLANE {
 	 * @return WP_Scripts $scripts The same object, possibly filtered.
 	 */
 	public function block_script_load( WP_Scripts $scripts ) {
-		// bail if disabled
+		/** 
+		 * bail if disabled
+		 */
 		if ( ! $this->enabled() ) {
 			return $scripts;
 		}
-		// make sure we have something registered first
+		/** 
+		 * make sure we have something registered first
+		 */
 		if ( ! isset( $scripts->registered ) ) {
 			return $scripts;
 		}
-		// fetch our registered scripts
+		/** 
+		 * fetch our registered scripts
+		 */
 		$registered = $scripts->registered;
-		// pass the entire set of registered data to the action to allow a bypass
+		/** 
+		 * pass the entire set of registered data to the action to allow a bypass
+		 */
 		do_action( 'airplane_mode_script_load', $registered );
 		/*
 		 * nothing actually being done here at the present time. this is a
 		 * placeholder for being able to modify the script loading in the same
-		 * manner that we do the CSS files
+		 * manner that we do the CSS files.
+		 *
+		 * send it back
 		 */
-		// send it back
 		return $scripts;
 	}
 	/**
@@ -341,14 +404,20 @@ class WPLT_AIRPLANE {
 	 * @return string `<img>` tag for the user's avatar.
 	 */
 	public function replace_gravatar( $avatar, $id_or_email, $size, $default, $alt ) {
-		// bail if disabled
+		/** 
+		 * bail if disabled
+		 */
 		if ( ! $this->enabled() ) {
 			return $avatar;
 		}
-		// swap out the file for a base64 encoded image
+		/** 
+		 * swap out the file for a base64 encoded image
+		 */
 		$image  = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
 		$avatar = "<img alt='{$alt}' src='{$image}' class='avatar avatar-{$size} photo' height='{$size}' width='{$size}' style='background:#eee;' />";
-		// return the item
+		/** 
+		 * return the item
+		 */
 		return $avatar;
 	}
 	/**
@@ -358,11 +427,15 @@ class WPLT_AIRPLANE {
 	 * @return string              Updated list with images removed
 	 */
 	public function default_avatar( $avatar_list ) {
-		// bail if disabled
+		/** 
+		 * bail if disabled
+		 */
 		if ( ! $this->enabled() ) {
 			return $avatar_list;
 		}
-		// remove images
+		/** 
+		 * remove images
+		 */
 		$avatar_list = preg_replace( '|<img([^>]+)> |i', '', $avatar_list );
 		return $avatar_list;
 	}
@@ -377,9 +450,13 @@ class WPLT_AIRPLANE {
 	 * @return bool|array|WP_Error         A WP_Error object if Airplane Mode is enabled. Original $status if not.
 	 */
 	public function disable_http_reqs( $status = false, $args = array(), $url = '' ) {
-		// pass our data to the action to allow a bypass
+		/** 
+		 * pass our data to the action to allow a bypass
+		 */
 		do_action( 'airplane_mode_http_args', $status, $args, $url );
-		// disable the http requests only if enabled
+		/** 
+		 * disable the http requests only if enabled
+		 */
 		if ( $this->enabled() ) {
 			return new WP_Error( 'airplane_mode_enabled', __( 'Airplane Mode is enabled', 'airplane-mode' ) );
 		} else {
@@ -390,9 +467,13 @@ class WPLT_AIRPLANE {
 	 * Load our small CSS file for the toggle switch.
 	 */
 	public function toggle_css() {
-		// set a suffix for loading the minified or normal
+		/** 
+		 * set a suffix for loading the minified or normal
+		 */
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '.css' : '.min.css';
-		// load the CSS file itself
+		/** 
+		 * load the CSS file itself
+		 */
 		wp_enqueue_style( 'airplane-mode', plugins_url( '/lib/css/airplane-mode' . $suffix, __FILE__ ), array(), AIRMDE_VER, 'all' );
 	}
 	/**
@@ -402,23 +483,35 @@ class WPLT_AIRPLANE {
 	 * @return void if any of the sanity checks fail and we bail early.
 	 */
 	public function toggle_check() {
-		// bail if current user doesn't have cap
+		/** 
+		 * bail if current user doesn't have cap
+		 */
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return;
 		}
-		// check for our nonce
+		/** 
+		 * check for our nonce
+		 */
 		if ( ! isset( $_GET['airmde_nonce'] ) || ! wp_verify_nonce( $_GET['airmde_nonce'], 'airmde_nonce' ) ) {
 			return;
 		}
-		// now check for our query string
+		/** 
+		 * now check for our query string
+		 */
 		if ( ! isset( $_REQUEST['airplane-mode'] ) || ! in_array( $_REQUEST['airplane-mode'], array( 'on', 'off' ) ) ) {
 			return;
 		}
-		// delete old per-site option
+		/** 
+		 * delete old per-site option
+		 */
 		delete_option( 'airplane-mode' );
-		// update the setting
+		/** 
+		 * update the setting
+		 */
 		update_site_option( 'airplane-mode', sanitize_key( $_REQUEST['airplane-mode'] ) );
-		// and go about our business
+		/** 
+		 * and go about our business
+		 */
 		wp_redirect( self::get_redirect() );
 		exit;
 	}
@@ -428,9 +521,13 @@ class WPLT_AIRPLANE {
 	 * @return string The URL to redirect to.
 	 */
 	protected static function get_redirect() {
-		// fire action to allow for functions to run on status change
+		/** 
+		 * fire action to allow for functions to run on status change
+		 */
 		do_action( 'airplane_mode_status_change' );
-		// return the args for the actual redirect
+		/** 
+		 * return the args for the actual redirect
+		 */
 		return remove_query_arg( array(
 			'airplane-mode', 'airmde_nonce',
 			'user_switched', 'switched_off', 'switched_back',
@@ -446,26 +543,45 @@ class WPLT_AIRPLANE {
 	 * @return void if current user can't manage options and we bail early.
 	 */
 	public function admin_bar_toggle( WP_Admin_Bar $wp_admin_bar ) {
-		// bail if current user doesn't have cap
+		/** 
+		 * bail if current user doesn't have cap
+		 */
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return;
 		}
-		// get the current status
+		/** 
+		 * [$status description]
+		 * @var [type]
+		 */
 		$status = $this->enabled();
-		// set a title message (translatable)
+		/** 
+		 * set a title message (translatable)
+		 */
 		$title  = ! $status ? __( 'Airplane Mode is disabled', 'airplane-mode' ) : __( 'Airplane Mode is enabled', 'airplane-mode' );
-		// set our toggle variable parameter (in reverse since we want the opposite action)
+		/** 
+		 * set our toggle variable parameter (in reverse since we want the opposite action)
+		 */
 		$toggle = $status ? 'off' : 'on';
-		// determine our class based on the status
+		/** 
+		 * determine our class based on the status
+		 */
 		$class  = 'airplane-toggle-icon-';
 		$class .= $status ? 'on' : 'off';
-		// get my text
+		/** 
+		 * get my text
+		 */
 		$text = __( 'Airplane Mode', 'airplane-mode' );
-		// get my icon
+		/** 
+		 * get my icon
+		 */
 		$icon = '<span class="airplane-toggle-icon ' . sanitize_html_class( $class ) . '"></span>';
-		// get our link with the status parameter
+		/** 
+		 * get our link with the status parameter
+		 */
 		$link = wp_nonce_url( add_query_arg( 'airplane-mode', $toggle ), 'airmde_nonce', 'airmde_nonce' );
-		// now add the admin bar link
+		/** 
+		 * now add the admin bar link
+		 */
 		$wp_admin_bar->add_menu(
 			array(
 				'id'        => 'airplane-mode-toggle',
@@ -498,26 +614,34 @@ class WPLT_AIRPLANE {
 	 * @return null
 	 */
 	public function purge_transients() {
-		// purge the transients related to updates when disabled
+		/**
+		 * purge the transients related to updates when disabled
+		 */
 		if ( ! $this->enabled() ) {
 			delete_site_transient( 'update_core' );
 			delete_site_transient( 'update_plugins' );
 			delete_site_transient( 'update_themes' );
 		}
 	}
-/// end class
+	/** 
+	 * end class
+	 */
 }
 
-// Disable plugins regardless of environment
+/**
+ * Disable plugins regardless of environment
+ */
 if (defined('WPLT_DISABLED_PLUGINS') && WPLT_DISABLED_PLUGINS ) {
 	new WPLT_DISABLE( unserialize (WPLT_DISABLED_PLUGINS) );
 }
 
-// Plugin disabling engine
-// Author: Mark Jaquith
-// Author URI: http://markjaquith.com/
-// Plugin URI: https://gist.github.com/markjaquith/1044546
-// Using fork: https://gist.github.com/Rarst/4402927
+/**
+ * Plugin disabling engine
+ * Author: Mark Jaquith
+ * Author URI: http://markjaquith.com/
+ * Plugin URI: https://gist.github.com/markjaquith/1044546
+ * Using fork: https://gist.github.com/Rarst/4402927
+ */
 
 class WPLT_DISABLE {
 	static $instance;
@@ -528,17 +652,23 @@ class WPLT_DISABLE {
 	 * @param array $disables Optional array of plugin filenames to disable
 	 */
 	public function __construct( Array $disables = NULL) {
-		// Handle what was passed in
+		/**
+		 * Handle what was passed in
+		 */
 		if ( is_array( $disables ) ) {
 			foreach ( $disables as $disable )
 				$this->disable( $disable );
 		}
 
-		// Add the filters
+		/**
+		 * Add the filters
+		 */
 		add_filter( 'option_active_plugins', array( $this, 'do_disabling' ) );
 		add_filter( 'site_option_active_sitewide_plugins', array( $this, 'do_network_disabling' ) );
 
-		// Allow other plugins to access this instance
+		/**
+		 * Allow other plugins to access this instance
+		 */
 		self::$instance = $this;
 	}
 
