@@ -139,12 +139,17 @@ if (defined('WPLT_NOTIFY') && WPLT_NOTIFY ) {
 		/** 
 		 * Only send if post is published
 		 */
-		if ( get_post_status( $post_id ) == 'publish' ) {
+		if ( ! wp_is_post_revision( $post_id ) ) && ( get_post_status( $post_id ) == 'publish' ) {
+			/**
+			 * Only tell us about the author if he has a name.
+			 */
+			if ( get_the_modified_author( $post_id ) != null) {
+				$author = " by " . get_the_modified_author( $post_id );
+			}
 			$post_title = get_the_title( $post_id );
 			$post_url = get_permalink( $post_id );
-			$author = get_the_modified_author( $post_id );
 			$subject = get_bloginfo('name') . ': A post has been updated.';
-			$message = "The page '" . $post_title . "' (" . $post_url . ") has been updated by " . $author . ".";
+			$message = "The page '" . $post_title . "' (" . $post_url . ") has been updated" . $author . ".";
 
 			/** 
 			 * Send email to admin.
@@ -173,14 +178,18 @@ if (defined('WPLT_AIRPLANE') && WPLT_AIRPLANE ) {
 	if( ! defined( 'AIRMDE_VER' ) ) {
 		define( 'AIRMDE_VER', '0.0.1' );
 	}
-	/** 
-	 * [$Airplane_Mode_Core description]
-	 * @var [type]
-	 */
+
 	$Airplane_Mode_Core = WPLT_AIRPLANE::getInstance();
 
 	function wplt_airplane_css() {
 		if ( is_admin_bar_showing() ) {
+
+/**
+ * Some nice readable CSS so no one wonder's what's going on
+ * when inspecting the head. I think it's best to just jack 
+ * these styles into the head and not bother loading another
+ * stylesheet.
+ */			
 			echo "
 <!-- WPLT Airplane Mode -->
 <style type='text/css'>
