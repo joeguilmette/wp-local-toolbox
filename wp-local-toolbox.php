@@ -137,12 +137,17 @@ if (defined('WPLT_NOTIFY') && WPLT_NOTIFY ) {
 	function notify_on_post_update( $post_id ) {
 
 		/** 
-		 * Only send if post is published
-		 */
-		if ( ! wp_is_post_revision( $post_id ) ) && ( get_post_status( $post_id ) == 'publish' ) {
+		* Not a post revision
+		*/
+		if ( wp_is_post_revision( $post_id ) )
+			return;
+		/**
+		* And only if it's published
+		*/
+		if ( get_post_status( $post_id ) == 'publish' ) {
 			/**
-			 * Only tell us about the author if he has a name.
-			 */
+			* Only tell us about the author if he has a name.
+			*/
 			if ( get_the_modified_author( $post_id ) != null) {
 				$author = " by " . get_the_modified_author( $post_id );
 			}
@@ -152,8 +157,8 @@ if (defined('WPLT_NOTIFY') && WPLT_NOTIFY ) {
 			$message = "The page '" . $post_title . "' (" . $post_url . ") has been updated" . $author . ".";
 
 			/** 
-			 * Send email to admin.
-			 */
+			* Send email to admin.
+			*/
 			wp_mail( WPLT_NOTIFY, $subject, $message );
 		}
 	}
