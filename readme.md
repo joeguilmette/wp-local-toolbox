@@ -65,6 +65,8 @@ You're welcome.
 
 ##Credit
 
+* Original WPLT Plugin by Joe Guilmette: https://github.com/joeguilmette/wp-local-toolbox 
+
 * Plugin disabling from Mark Jaquith: https://gist.github.com/markjaquith/1044546
 
 	* Using this fork: https://gist.github.com/Rarst/4402927
