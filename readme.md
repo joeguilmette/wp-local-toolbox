@@ -54,7 +54,7 @@ define('WPLT_DISABLED_PLUGINS', serialize(array( 'w3-total-cache/w3-total-cache.
 
 define('WPLT_AIRPLANE', 'true');
 
-define('WPLT_NOTIFY','wplt.4jr8a@zapiermail.com')
+define('WPLT_NOTIFY','someone@somewhere.com')
 ```
 
 ##Notes
