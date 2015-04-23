@@ -1,6 +1,6 @@
 #WP Local Toolbox
 
-Through constants defined in wp-config, you can disable plugins, disable the  loading of external files, set search engine visibility, display the server name and change the color of the admin bar, or literally anything else you can think of.
+Through constants defined in wp-config, you can disable plugins, disable the  loading of external files, set search engine visibility, display or hide the admin bar, display the server name and change the color of the admin bar, or literally anything else you can think of.
 
 This is an invaluable tool if you often work in production, staging, and local servers at the same time. 
 
