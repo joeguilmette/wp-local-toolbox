@@ -69,10 +69,12 @@ You're welcome.
 
 ##Credit
 
-* Original WPLT Plugin by Joe Guilmette: https://github.com/joeguilmette/wp-local-toolbox 
+* Plugin disabling from [Mark Jaquith](https://twitter.com/markjaquith): https://gist.github.com/markjaquith/1044546
 
-* Plugin disabling from Mark Jaquith: https://gist.github.com/markjaquith/1044546
+	* Using this fork from [Andrey Savchenko](https://twitter.com/rarst): https://gist.github.com/Rarst/4402927
 
-	* Using this fork: https://gist.github.com/Rarst/4402927
+* Airplane Mode from [Andrew Norcross](https://twitter.com/norcross): https://github.com/norcross/airplane-mode
 
-* Airplane Mode from Andrew Norcross: https://github.com/norcross/airplane-mode
+* Always showing the admin bar from [Jeff Star](https://twitter.com/perishable): http://digwp.com/2011/04/admin-bar-tricks/
+
+* A healthy refactoring from [Jon Brown](https://twitter.com/jb510) of [9seeds](http://9seeds.com/)
