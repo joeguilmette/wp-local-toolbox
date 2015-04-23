@@ -1,20 +1,27 @@
-#WP Local Toolbox
+=== WP Local Toolbox ===
+Contributors: joeguilmette,jb510
+Tags: admin,administration,responsive,dashboard,notification,simple, develop, developer, developing, development
+Tested up to: 4.1.2
+Stable tag: 1.2
+License: GPL v2+
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
+A simple plugin to help manage development with local, staging and production servers.
+
+== Description ==
 Through constants defined in wp-config, you can disable plugins, disable the  loading of external files, set search engine visibility, display or hide the admin bar, display the server name and change the color of the admin bar, or literally anything else you can think of.
 
 This is an invaluable tool if you often work in production, staging, and local servers at the same time. 
 
-WP Local Toolbox uses the following constants defined in wp-config.php:
-
 * **WPLT_SERVER**: The name of your server environment. It will be displayed in the admin bar at browser widths greater than 1030px. If left undefined, the plugin will make no changes to the admin bar. 
 
-	If not defined as 'PRODUCTION' or 'LIVE', the plugin will enable 'Discourage search engines from indexing this site' to prevent your development and staging servers from being indexed. This option is not stored in the database, so your production server will still look to the actual setting on the Reading page.
+	If not defined as `PRODUCTION` or `LIVE`, the plugin will enable 'Discourage search engines from indexing this site' to prevent your development and staging servers from being indexed. This option is not stored in the database, so your production server will still look to the actual setting on the Reading page.
 
 * **WPLT_COLOR**: Determines the color of the admin bar. You can set this to any CSS color. If left undefined, will use the following defaults: 
 	
-	* Production / Live: red
-	* Staging / Testing: orange
-	* Local / Dev: green
+	* PRODUCTION / LIVE: red
+	* STAGING / TESTING: orange
+	* LOCAL / DEV: green
 
 * **WPLT_ADMINBAR**: Show or hide the admin bar on the frontend. `FALSE` will force it to be hidden, `TRUE` will force it to display, `ALWAYS` will display the admin bar even when logged out. These settings will override the 'Show toolbar' setting in the Users > Your Profile and `add_filter('show_admin_bar', '__return_false');` in functions.php, but doesn't attempt to overcome any CSS based hiding of the admin bar.
 
@@ -26,28 +33,9 @@ WP Local Toolbox uses the following constants defined in wp-config.php:
 
 	On and Off: Can be toggled from the admin bar by clicking 'Airplane Mode'. A ✗ or ✓ will indicate if Airplane Mode is enabled or disabled. 
 
-##Modification
+**Example wp-config.php Entries**
 
-You can add code that will be executed depending on server name by modifying the following in wp-local-toolbox.php.
-
-I'd love a pull request if you come up with something useful.
-
-```
-if (strtoupper(WPLT_SERVER) != 'LIVE' && strtoupper(WPLT_SERVER) != 'PRODUCTION') {
-	// Everything except PRODUCTION/LIVE SERVER
-
-	// Hide from robots
-	add_filter( 'pre_option_blog_public', '__return_zero' );
-
-} else {
-	// PRODUCTION/LIVE SERVER
-
-}
-```
-
-##Example
-
-```
+`
 // set server environment to 'LOCAL'
 define('WPLT_SERVER', 'local');
 
@@ -62,7 +50,7 @@ define('WPLT_DISABLED_PLUGINS', serialize(
 	array(
 		'w3-total-cache/w3-total-cache.php',
 		'updraftplus/updraftplus.php',
-		'nginx-helper/nginx-helper.php',
+		'nginx-helper/nginx-helper.php,
 		'wpremote/plugin.php',
 		'wordpress-https/wordpress-https.php',
 	)
@@ -71,17 +59,37 @@ define('WPLT_DISABLED_PLUGINS', serialize(
 // enable the Airplane Mode toggle
 define('WPLT_AIRPLANE', 'true');
 
-// send an email to someone@somewhere.com when any post or page is updated
+// send an email to someone@somewhere.com 
+// whenever any post or page is updated
 define('WPLT_NOTIFY','someone@somewhere.com')
-```
+`
 
-##Notes
+**Modification**
+
+You can add code that will be executed depending on server name by modifying the following in wp-local-toolbox.php.
+
+I'd love a pull request if you come up with something useful.
+
+`
+if (strtoupper(WPLT_SERVER) != 'LIVE' && strtoupper(WPLT_SERVER) != 'PRODUCTION') {
+	// Everything except PRODUCTION/LIVE SERVER
+
+	// Hide from robots
+	add_filter( 'pre_option_blog_public', '__return_zero' );
+
+} else {
+	// PRODUCTION/LIVE SERVER
+
+}
+`
+
+**Notes**
 
 As a special thank you, this plugin will remove the ridiculous `Howdy, ` that is prepended to the username in the admin bar.
 
 You're welcome.
 
-##Credit
+**Credit**
 
 * Plugin disabling from [Mark Jaquith](https://twitter.com/markjaquith): https://gist.github.com/markjaquith/1044546
 
@@ -92,3 +100,6 @@ You're welcome.
 * Always showing the admin bar from [Jeff Star](https://twitter.com/perishable): http://digwp.com/2011/04/admin-bar-tricks/
 
 * A healthy refactoring from [Jon Brown](https://twitter.com/jb510) of [9seeds](http://9seeds.com/)
+
+== Installation ==
+After installation, you must define constants in the wp-config.php file.
