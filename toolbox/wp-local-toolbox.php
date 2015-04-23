@@ -23,9 +23,11 @@ if (defined('WPLT_SERVER') && WPLT_SERVER) {
 		 */
 	}
 
-	/**
-	 * Add admin notice
-	 */
+/**
+ * =======================================
+ * ===============Admin Bar===============
+ * =======================================
+ */
 	function environment_notice() {
 		$env_text = strtoupper(WPLT_SERVER);
 
@@ -62,12 +64,12 @@ if (defined('WPLT_SERVER') && WPLT_SERVER) {
 			}
 
 		}
-/**
- * Some nice readable CSS so no one wonder's what's going on
- * when inspecting the head. I think it's best to just jack
- * these styles into the head and not bother loading another
- * stylesheet.
- */
+		/**
+		 * Some nice readable CSS so no one wonder's what's going on
+		 * when inspecting the head. I think it's best to just jack
+		 * these styles into the head and not bother loading another
+		 * stylesheet.
+		 */
 		echo "
 <!-- WPLT Admin Bar Notice -->
 <style type='text/css'>
@@ -88,7 +90,7 @@ if (defined('WPLT_SERVER') && WPLT_SERVER) {
 	}
 
 	/**
-	 * I literally can't even
+	 * Literally cannot even
 	 */
 	function goodbye_howdy($wp_admin_bar) {
 		$my_account = $wp_admin_bar->get_node('my-account');
@@ -122,7 +124,9 @@ if (defined('WPLT_SERVER') && WPLT_SERVER) {
 }
 
 /**
- * Get notified of post changes
+ * =======================================
+ * =============Notifications=============
+ * =======================================
  */
 
 if (defined('WPLT_NOTIFY') && WPLT_NOTIFY) {
@@ -160,14 +164,13 @@ if (defined('WPLT_NOTIFY') && WPLT_NOTIFY) {
 }
 
 /**
- * Airplane Mode regardless of environment
+ * =======================================
+ * =============Airplane Mode=============
+ * =======================================
  */
 
 if (defined('WPLT_AIRPLANE') && WPLT_AIRPLANE) {
 
-	/**
-	 * Airplane Mode
-	 */
 	if (!defined('AIRMDE_BASE ')) {
 		define('AIRMDE_BASE', plugin_basename(__FILE__));
 	}
@@ -178,19 +181,21 @@ if (defined('WPLT_AIRPLANE') && WPLT_AIRPLANE) {
 		define('AIRMDE_VER', '0.0.1');
 	}
 
-	// Include Airplane_Mode_Core Class
+	/**
+	 * Include Airplane_Mode_Core Class
+	 */
 	require_once __DIR__ . '/inc/WPLT_Airplane_Mode_Core.php';
 	$Airplane_Mode_Core = WPLT_Airplane_Mode_Core::getInstance();
 
 	function wplt_airplane_css() {
 		if (is_admin_bar_showing()) {
 
-/**
- * Some nice readable CSS so no one wonder's what's going on
- * when inspecting the head. I think it's best to just jack
- * these styles into the head and not bother loading another
- * stylesheet.
- */
+			/**
+			 * Some nice readable CSS so no one wonder's what's going on
+			 * when inspecting the head. I think it's best to just jack
+			 * these styles into the head and not bother loading another
+			 * stylesheet.
+			 */
 			echo "
 <!-- WPLT Airplane Mode -->
 <style type='text/css'>
@@ -209,7 +214,10 @@ if (defined('WPLT_AIRPLANE') && WPLT_AIRPLANE) {
  * Disable plugins regardless of environment
  */
 if (defined('WPLT_DISABLED_PLUGINS') && WPLT_DISABLED_PLUGINS) {
-	// Include
+
+	/**
+	 * Include
+	 */
 	require_once __DIR__ . '/inc/WPLT_Disable_Plugins.php';
 	new WPLT_Disable_Plugins(unserialize(WPLT_DISABLED_PLUGINS));
 }
