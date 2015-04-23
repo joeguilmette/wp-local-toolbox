@@ -48,17 +48,31 @@ if (strtoupper(WPLT_SERVER) != 'LIVE' && strtoupper(WPLT_SERVER) != 'PRODUCTION'
 ##Example
 
 ```
-define('WPLT_SERVER', 'local'); // set server environment to 'LOCAL'
+// set server environment to 'LOCAL'
+define('WPLT_SERVER', 'local');
 
-define('WPLT_COLOR', 'purple'); // set admin bar color to #800080
+// set admin bar color to #800080
+define('WPLT_COLOR', 'purple');
 
-define('WPLT_ADMINBAR', 'always'); // show the admin bar even when logged out
+// show the admin bar even when logged out
+define('WPLT_ADMINBAR', 'always');
 
-define('WPLT_DISABLED_PLUGINS', serialize(array( 'w3-total-cache/w3-total-cache.php', 'updraftplus/updraftplus.php', 'nginx-helper/nginx-helper.php', 'wpremote/plugin.php' ))); // deactive a set of plugins
+// deactivate a set of plugins
+define('WPLT_DISABLED_PLUGINS', serialize(
+	array(
+		'w3-total-cache/w3-total-cache.php',
+		'updraftplus/updraftplus.php',
+		'nginx-helper/nginx-helper.php',
+		'wpremote/plugin.php',
+		'wordpress-https/wordpress-https.php',
+	)
+));
 
-define('WPLT_AIRPLANE', 'true'); // enable the Airplane Mode toggle
+// enable the Airplane Mode toggle
+define('WPLT_AIRPLANE', 'true');
 
-define('WPLT_NOTIFY','someone@somewhere.com') // send an email to someone@somewhere.com when any post or page is updated
+// send an email to someone@somewhere.com when any post or page is updated
+define('WPLT_NOTIFY','someone@somewhere.com')
 ```
 
 ##Notes
