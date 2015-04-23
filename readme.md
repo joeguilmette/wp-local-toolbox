@@ -54,7 +54,7 @@ define('WPLT_DISABLED_PLUGINS', serialize(array( 'w3-total-cache/w3-total-cache.
 
 define('WPLT_AIRPLANE', 'true');
 
-define('WPLT_NOTIFY','wplt.4jr8a@zapiermail.com')
+define('WPLT_NOTIFY','someone@somewhere.com')
 ```
 
 ##Notes
@@ -64,6 +64,8 @@ As a special thank you, this plugin will remove the ridiculous `Howdy, ` that is
 You're welcome.
 
 ##Credit
+
+* Original WPLT Plugin by Joe Guilmette: https://github.com/joeguilmette/wp-local-toolbox 
 
 * Plugin disabling from Mark Jaquith: https://gist.github.com/markjaquith/1044546
 
