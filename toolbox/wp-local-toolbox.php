@@ -113,7 +113,10 @@ if (defined('WPLT_SERVER') && WPLT_SERVER) {
 				add_filter('show_admin_bar', '__return_true');
 			}
 			if (strtoupper(WPLT_ADMINBAR) == 'ALWAYS') {
-
+				/**
+				 * @author Jeff Star (https://twitter.com/perishable)
+				 * @link http://digwp.com/2011/04/admin-bar-tricks/
+				 */
 				function always_show_adminbar($wp_admin_bar) {
 					if (!is_user_logged_in()) {
 						$wp_admin_bar->add_menu(array('title' => __('Log In'), 'href' => wp_login_url()));
