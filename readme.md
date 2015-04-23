@@ -16,7 +16,7 @@ WP Local Toolbox uses the following constants defined in wp-config.php:
 	* Staging / Testing: orange
 	* Local / Dev: green
 
-* **WPLT_ADMINBAR**: Boolean to show or hide the admin bar on the frontend. `TRUE` will force the adminbar to display, `FALSE` will force it to be hidden. Will override the 'Show toolbar' setting in the Users > Your Profile and `add_filter('show_admin_bar', '__return_false');` in functions.php, but doesn't attempt to overcome any CSS based hiding of the admin bar.
+* **WPLT_ADMINBAR**: Show or hide the admin bar on the frontend. `FALSE` will force it to be hidden, `TRUE` will force it to display, `ALWAYS` will display the admin bar even when logged out. These settings will override the 'Show toolbar' setting in the Users > Your Profile and `add_filter('show_admin_bar', '__return_false');` in functions.php, but doesn't attempt to overcome any CSS based hiding of the admin bar.
 
 * **WPLT_DISABLED_PLUGINS**: An array of plugins to disable. This does not store any data in the database, so plugins that are manually deactivated or activated will stay so when undefined in this constant.
 
@@ -52,7 +52,7 @@ define('WPLT_SERVER', 'local'); // set server environment to 'LOCAL'
 
 define('WPLT_COLOR', 'purple'); // set admin bar color to #800080
 
-define('WPLT_ADMINBAR', 'false'); // hide admin bar on front end
+define('WPLT_ADMINBAR', 'always'); // show the admin bar even when logged out
 
 define('WPLT_DISABLED_PLUGINS', serialize(array( 'w3-total-cache/w3-total-cache.php', 'updraftplus/updraftplus.php', 'nginx-helper/nginx-helper.php', 'wpremote/plugin.php' ))); // deactive a set of plugins
 

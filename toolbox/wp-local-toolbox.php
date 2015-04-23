@@ -107,10 +107,20 @@ if (defined('WPLT_SERVER') && WPLT_SERVER) {
 		 * Control the frontend admin bar
 		 */
 		if (defined('WPLT_ADMINBAR') && WPLT_ADMINBAR) {
-			if (strtoupper(WPLT_ADMINBAR) == 'TRUE') {
-				add_filter('show_admin_bar', '__return_true');
-			} elseif (strtoupper(WPLT_ADMINBAR) == 'FALSE') {
+			if (strtoupper(WPLT_ADMINBAR) == 'FALSE') {
 				add_filter('show_admin_bar', '__return_false');
+			} elseif (strtoupper(WPLT_ADMINBAR) == 'TRUE' or strtoupper(WPLT_ADMINBAR) == 'ALWAYS') {
+				add_filter('show_admin_bar', '__return_true');
+			}
+			if (strtoupper(WPLT_ADMINBAR) == 'ALWAYS') {
+
+				function always_show_adminbar($wp_admin_bar) {
+					if (!is_user_logged_in()) {
+						$wp_admin_bar->add_menu(array('title' => __('Log In'), 'href' => wp_login_url()));
+					}
+				}
+				add_action('admin_bar_menu', 'always_show_adminbar');
+				add_filter('show_admin_bar', '__return_true', 1000);
 			}
 		}
 
