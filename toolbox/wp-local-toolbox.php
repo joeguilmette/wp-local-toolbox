@@ -102,6 +102,18 @@ if (defined('WPLT_SERVER') && WPLT_SERVER) {
 	}
 
 	function wplt_server_init() {
+
+		/**
+		 * Control the frontend admin bar
+		 */
+		if (defined('WPLT_ADMINBAR') && WPLT_ADMINBAR) {
+			if (strtoupper(WPLT_ADMINBAR) == 'TRUE') {
+				add_filter('show_admin_bar', '__return_true');
+			} elseif (strtoupper(WPLT_ADMINBAR) == 'FALSE') {
+				add_filter('show_admin_bar', '__return_false');
+			}
+		}
+
 		if (is_admin_bar_showing()) {
 			/**
 			 * Add the environment to the admin panel
