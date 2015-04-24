@@ -25,6 +25,14 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+/**
+ * Changes applied for WPLT:
+ *
+ * - Remove enqueing CSS files
+ * - Remove the HTTP request counter
+ * - Change toggle indicator to checkmark
+ */
+
 class WPLT_Airplane_Mode_Core {
 
 	/**
@@ -65,7 +73,7 @@ class WPLT_Airplane_Mode_Core {
 		add_action('airplane_mode_status_change', array($this, 'purge_transients'));
 
 		// add our counter action
-		add_action('airplane_mode_http_args', array($this, 'count_http_requests'), 0, 0);
+		// add_action('airplane_mode_http_args', array($this, 'count_http_requests'), 0, 0);
 
 		// settings
 		add_action('admin_bar_menu', array($this, 'admin_bar_toggle'), 9999);
@@ -384,7 +392,7 @@ class WPLT_Airplane_Mode_Core {
 	public function disable_http_reqs($status = false, $args = array(), $url = '') {
 
 		// pass our data to the action to allow a bypass
-		do_action('airplane_mode_http_args', $status, $args, $url);
+		// do_action('airplane_mode_http_args', $status, $args, $url);
 
 		// disable the http requests only if enabled
 		return $this->enabled() ? new WP_Error('airplane_mode_enabled', __('Airplane Mode is enabled', 'airplane-mode')) : $status;
@@ -474,14 +482,14 @@ class WPLT_Airplane_Mode_Core {
 		$text = __('Airplane Mode', 'airplane-mode');
 
 		// get the HTTP count
-		if (!empty($this->http_count)) {
-			$count = number_format_i18n($this->http_count);
-		} else {
-			$count = '';
-		}
+		// if (!empty($this->http_count)) {
+		// 	$count = number_format_i18n($this->http_count);
+		// } else {
+		// 	$count = '';
+		// }
 
 		// get my icon
-		$icon = '<span class="airplane-toggle-icon ' . sanitize_html_class($class) . '">' . $count . '</span>';
+		$icon = '<span class="airplane-toggle-icon ' . sanitize_html_class($class) . '"></span>';
 
 		// get our link with the status parameter
 		$link = wp_nonce_url(add_query_arg('airplane-mode', $toggle), 'airmde_nonce', 'airmde_nonce');
@@ -787,9 +795,9 @@ class WPLT_Airplane_Mode_Core {
 	 *
 	 * @return null
 	 */
-	public function count_http_requests() {
-		$this->http_count++;
-	}
+	// public function count_http_requests() {
+	// 	$this->http_count++;
+	// }
 
 /// end class
 }
