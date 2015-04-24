@@ -1,15 +1,21 @@
-#WP Local Toolbox
+=== WP Local Toolbox ===
+Contributors: joeguilmette,jb510
+Tags: admin,administration,responsive,dashboard,notification,simple, develop, developer, developing, development
+Tested up to: 4.1.2
+Stable tag: 1.2
+License: GPL v2+
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 A simple plugin to help manage development over local, staging and production servers.
 
-Available on WordPress.org: https://wordpress.org/plugins/wp-local-toolbox/
-
-##Description
+== Description ==
 Through constants defined in wp-config, you can disable plugins, disable the  loading of external files, set search engine visibility, display or hide the admin bar, display the server name and change the color of the admin bar, or literally anything else you can think of. All without touching the database, so you can push and pull without worrying.
 
 This is an invaluable tool if you often work in production, staging, and local servers at the same time.
 
-##Constants
+For support, pull requests, and discussion: https://github.com/joeguilmette/wp-local-toolbox
+
+=Constants=
 
 * **WPLT_SERVER**: The name of your server environment. It will be displayed in the admin bar at browser widths greater than 1030px. If left undefined, the plugin will make no changes to the admin bar. 
 
@@ -31,7 +37,7 @@ This is an invaluable tool if you often work in production, staging, and local s
 
 	On and Off: Can be toggled from the admin bar by clicking 'Airplane Mode'. In the admin bar a ✗ or ✓ will indicate if Airplane Mode is enabled or disabled. 
 
-##Example wp-config.php Entries
+=Example wp-config.php Entries=
 
 `
 // set server environment to 'LOCAL'
@@ -81,13 +87,13 @@ if (strtoupper(WPLT_SERVER) != 'LIVE' && strtoupper(WPLT_SERVER) != 'PRODUCTION'
 }
 `
 
-##Notes
+=Notes=
 
 As a special thank you, this plugin will remove the ridiculous `Howdy, ` that is prepended to the username in the admin bar.
 
 You're welcome.
 
-##Credit
+=Credit=
 
 * Plugin disabling from [Mark Jaquith](https://twitter.com/markjaquith): https://gist.github.com/markjaquith/1044546
 
@@ -99,5 +105,5 @@ You're welcome.
 
 * A healthy refactoring from [Jon Brown](https://twitter.com/jb510) of [9seeds](http://9seeds.com/)
 
-##Installation
+== Installation ==
 After installation, you must define constants in the wp-config.php file.
