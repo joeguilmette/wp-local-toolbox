@@ -15,7 +15,7 @@ This is an invaluable tool if you often work in production, staging, and local s
 
 For support, pull requests, and discussion: https://github.com/joeguilmette/wp-local-toolbox
 
-=Constants=
+= Constants =
 
 * **WPLT_SERVER**: The name of your server environment. It will be displayed in the admin bar at browser widths greater than 1030px. If left undefined, the plugin will make no changes to the admin bar. 
 
@@ -37,7 +37,7 @@ For support, pull requests, and discussion: https://github.com/joeguilmette/wp-l
 
 	On and Off: Can be toggled from the admin bar by clicking 'Airplane Mode'. In the admin bar a ✗ or ✓ will indicate if Airplane Mode is enabled or disabled. 
 
-=Example wp-config.php Entries=
+= Example wp-config.php Entries =
 
 `
 // set server environment to 'LOCAL'
@@ -68,7 +68,7 @@ define('WPLT_AIRPLANE', 'true');
 define('WPLT_NOTIFY','someone@somewhere.com')
 `
 
-=Modification=
+= Modification =
 
 You can add code that will be executed depending on server name by modifying the following in wp-local-toolbox.php.
 
@@ -87,13 +87,13 @@ if (strtoupper(WPLT_SERVER) != 'LIVE' && strtoupper(WPLT_SERVER) != 'PRODUCTION'
 }
 `
 
-=Notes=
+= Notes =
 
 As a special thank you, this plugin will remove the ridiculous `Howdy, ` that is prepended to the username in the admin bar.
 
 You're welcome.
 
-=Credit=
+= Credit =
 
 * Plugin disabling from [Mark Jaquith](https://twitter.com/markjaquith): https://gist.github.com/markjaquith/1044546
 
