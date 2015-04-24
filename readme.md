@@ -62,7 +62,7 @@ define('WPLT_AIRPLANE', 'true');
 define('WPLT_NOTIFY','someone@somewhere.com')
 ```
 
-=Modification=
+##Modification
 
 You can add code that will be executed depending on server name by modifying the following in wp-local-toolbox.php.
 
