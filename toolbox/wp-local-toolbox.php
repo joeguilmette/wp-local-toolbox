@@ -121,7 +121,11 @@ if (defined('WPLT_SERVER') && WPLT_SERVER) {
 				 */
 				function always_show_adminbar($wp_admin_bar) {
 					if (!is_user_logged_in()) {
-						$wp_admin_bar->add_menu(array('title' => __('Log In'), 'href' => wp_login_url()));
+						$wp_admin_bar->add_menu(array(
+							'id'    => 'wpadminbar',
+							'title' => __('Log In'),
+							'href' => wp_login_url()
+						));
 					}
 				}
 				add_action('admin_bar_menu', 'always_show_adminbar');
