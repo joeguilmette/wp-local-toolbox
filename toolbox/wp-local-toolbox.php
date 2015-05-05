@@ -242,7 +242,9 @@ if (defined('WPLT_AIRPLANE') && WPLT_AIRPLANE) {
 }
 
 /**
- * Disable plugins regardless of environment
+ * =======================================
+ * ===========Disabled Plugins============
+ * =======================================
  */
 if (defined('WPLT_DISABLED_PLUGINS') && WPLT_DISABLED_PLUGINS) {
 
