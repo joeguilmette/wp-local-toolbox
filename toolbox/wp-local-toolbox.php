@@ -217,13 +217,15 @@ if (defined('WPLT_NOTIFY') && WPLT_NOTIFY) {
 						'icon_emoji' => ':triangular_flag_on_post:',
 						'channel' => WPLT_NOTIFY_CHANNEL,
 						'username' => get_bloginfo( 'name' ),
-						'text' => $message
+						'text' => $message,
+						'unfurl_links' => true
 					);
 				} else {
 					$bot_args = array(
 						'icon_emoji' => ':triangular_flag_on_post:',
 						'username' => get_bloginfo( 'name' ),
-						'text' => $message
+						'text' => $message,
+						'unfurl_links' => true
 					);
 				}
 
