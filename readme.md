@@ -23,7 +23,7 @@ This is an invaluable tool if you often work in production, staging, and local s
 
 * **WPLT_ADMINBAR**: Show or hide the admin bar on the frontend. `FALSE` will force it to be hidden, `TRUE` will force it to display, `ALWAYS` will display the admin bar even when logged out. These settings will override the 'Show toolbar' setting in the 'Users > Your Profile' options panel and `add_filter('show_admin_bar', '__return_false');` in functions.php, but doesn't attempt to overcome any CSS based hiding of the admin bar.
 
-* **WPLT_DISABLED_PLUGINS**: An array of plugins to disable. This does not store any data in the database, so plugins that are manually deactivated or activated will stay so when undefined in this constant.
+* **WPLT_DISABLED_PLUGINS**: An array of plugins to disable. This does not store any data in the database, so plugins that are manually deactivated or activated will stay so when undefined in this constant. **Note: In order for this to function properly, WP Local Toolbox must be installed as an mu-plugin. You can read more about mu-plugins here: [https://codex.wordpress.org/Must_Use_Plugins](https://codex.wordpress.org/Must_Use_Plugins)**. We're investigating ways to avoid this requirement; if you have any ideas we'd love to hear it!
 
 * **WPLT_NOTIFY**: Define this constant as the email address where you'd like to be notified of post updates. Helpful in production to see if a client has submitted a new post, or in development to see if data is being added to the staging environment so you know to pull before pushing. Especially helpful when combined with APIs like Zapier.
 
