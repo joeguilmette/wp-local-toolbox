@@ -196,11 +196,40 @@ if (defined('WPLT_NOTIFY') && WPLT_NOTIFY) {
 			}
 
 			/**
-			 * Send email to admin.
+			 * Check if it's a Slack Webhook URL
 			 */
-			wp_mail(WPLT_NOTIFY, $subject, $message);
-		}
-	}
+			if (strpos(WPLT_NOTIFY,'hooks.slack.com') !== false) {
+				
+				/**
+				 * Check if we've defined a channel
+				 */
+				if (defined('WPLT_NOTIFY_CHANNEL') && WPLT_NOTIFY_CHANNEL) {
+					$bot_args = array(
+						'icon_emoji' => ':triangular_flag_on_post:',
+						'channel' => WPLT_NOTIFY_CHANNEL,
+						'username' => get_bloginfo( 'name' ),
+						'text' => $message
+					);
+				} else {
+					$bot_args = array(
+						'icon_emoji' => ':triangular_flag_on_post:',
+						'username' => get_bloginfo( 'name' ),
+						'text' => $message
+					);
+				}
+
+				$payload = array( 'payload' => json_encode( $bot_args ) );
+				
+				$posting = wp_remote_post( WPLT_NOTIFY, array( 'body' => $payload ) );
+
+			/**
+			 * If it's not a Slack Webhook URL, send an email instead
+			 */
+			} else {
+				wp_mail(WPLT_NOTIFY, $subject, $message);
+			}
+		} // end if (get_post_status($post_id) == 'publish')
+	} // end function notify_on_post_update
 
 	/** 
 	 * Detect if this is a new post or not
