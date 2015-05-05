@@ -48,7 +48,7 @@ define('WPLT_DISABLED_PLUGINS', serialize(
 	array(
 		'w3-total-cache/w3-total-cache.php',
 		'updraftplus/updraftplus.php',
-		'nginx-helper/nginx-helper.php,
+		'nginx-helper/nginx-helper.php',
 		'wpremote/plugin.php',
 		'wordpress-https/wordpress-https.php',
 	)
