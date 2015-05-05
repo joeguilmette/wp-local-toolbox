@@ -175,19 +175,28 @@ if (defined('WPLT_NOTIFY') && WPLT_NOTIFY) {
 		 */
 		if (get_post_status($post_id) == 'publish') {
 			/**
-			 * Only tell us about the author if he has a name.
+			 * Only check if it's not an attachment, and only 
+			 * tell us about the author if he has a name.
 			 */
-			if (get_the_modified_author($post_id) != null) {
-				$author = " by " . get_the_modified_author($post_id);
+			if (get_post_type( $post_id ) != 'attachment' ) {
+				if (get_the_modified_author($post_id) != null) {
+					$author = " by " . get_the_modified_author($post_id);
+				} 
+			} else {
+				$author = null;
 			}
+
 			$post_title = get_the_title($post_id);
 			$post_url = get_permalink($post_id);
 
 			/**
-			 * Building the subject and body depending on
-			 * post status transition.
+			 * Building the subject and body depending on whether this is a new post or not.
 			 */
-			if (is_new_post($new_status,$old_status)) {
+			
+			if (get_post_type($post_id) == 'attachment') {
+				$subject = get_bloginfo('name') . ': A new attachment has been uploaded';
+				$message = "A new attachment, '" . $post_title . "' (" . $post_url . "), has been uploaded" . $author . ".\n\nView the attachment here: ".wp_get_attachment_url( $post_id );
+			} elseif (is_new_post($new_status,$old_status)) {
 				$subject = get_bloginfo('name') . ': A new post has been published';
 				$message = "A new post, '" . $post_title . "' (" . $post_url . "), has been published" . $author . ".";
 			} else {
@@ -219,17 +228,25 @@ if (defined('WPLT_NOTIFY') && WPLT_NOTIFY) {
 				}
 
 				$payload = array( 'payload' => json_encode( $bot_args ) );
-				
+				/**
+				 * Send the payload to Slack
+				 */
 				$posting = wp_remote_post( WPLT_NOTIFY, array( 'body' => $payload ) );
 
 			/**
 			 * If it's not a Slack Webhook URL, send an email instead
 			 */
 			} else {
+
 				wp_mail(WPLT_NOTIFY, $subject, $message);
+
 			}
 		} // end if (get_post_status($post_id) == 'publish')
 	} // end function notify_on_post_update
+
+	function notify_on_attachment_update($post_id) {
+		notify_on_post_update('new','publish',$post_id);
+	}
 
 	/** 
 	 * Detect if this is a new post or not
@@ -246,6 +263,11 @@ if (defined('WPLT_NOTIFY') && WPLT_NOTIFY) {
 	 * Send email when a post status changes
 	 */
 	add_action( 'transition_post_status', 'notify_on_post_update', 10, 3 );
+	if (defined('WPLT_DISABLE_ATTACHMENT_NOTIFY') && WPLT_DISABLE_ATTACHMENT_NOTIFY) {
+		return;
+	} else {
+		add_action( 'add_attachment','notify_on_attachment_update', 1, 1);
+	}
 }
 
 /**
