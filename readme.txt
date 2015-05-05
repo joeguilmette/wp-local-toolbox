@@ -31,7 +31,11 @@ For support, pull requests, and discussion: https://github.com/joeguilmette/wp-l
 
 * **WPLT_DISABLED_PLUGINS**: An array of plugins to disable. This does not store any data in the database, so plugins that are manually deactivated or activated will stay so when undefined in this constant. **Note: In order for this to function properly, WP Local Toolbox must be installed as an mu-plugin. You can read more about mu-plugins here: https://codex.wordpress.org/Must_Use_Plugins**. We're investigating ways to avoid this requirement; if you have any ideas we'd love to hear it!
 
-* **WPLT_NOTIFY**: Define this constant as the email address where you'd like to be notified of post updates. Helpful in production to see if a client has submitted a new post, or in development to see if data is being added to the staging environment so you know to pull before pushing. Especially helpful when combined with APIs like Zapier.
+* **WPLT_NOTIFY**: Define this constant as the email address where you'd like to be notified of post updates. You can specify either an email address or a Slack Incoming WebHook URL. You can set up a Slack Incoming WebHook URL here: https://my.slack.com/services/new/incoming-webhook/
+
+This is helpful in production to see if a client has submitted a new post, or in development to see if data is being added to the staging environment so you don't accidentally overwrite new posts when pushing databases around.
+
+* **WPLT_NOTIFY_CHANNEL**: If WPLT_NOTIFY is set to a Slack Incoming WebHook URL, you can specify the channel that the notification will be posted to. If left unset, it will post to the default channel specified in Slack's Incoming WebHooks settings page.
 
 * **WPLT_AIRPLANE**: Control loading of external files when developing locally. WP loads certain external files (fonts, gravatar, etc) and makes external HTTP calls. This isn't usually an issue, unless you're working in an evironment without a web connection. This plugin removes / unhooks those actions to reduce load time and avoid errors due to missing files.
 
@@ -66,6 +70,10 @@ define('WPLT_AIRPLANE', 'true');
 // send an email to someone@somewhere.com 
 // whenever any post or page is updated
 define('WPLT_NOTIFY','someone@somewhere.com')
+
+// or, send a notification to a Slack channel
+define('WPLT_NOTIFY', 'https://hooks.slack.com/services/etc');
+define('WPLT_NOTIFY_CHANNEL','#channel');
 `
 
 = Modification =
