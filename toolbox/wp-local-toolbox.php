@@ -161,7 +161,7 @@ if (defined('WPLT_SERVER') && WPLT_SERVER) {
  */
 
 if (defined('WPLT_NOTIFY') && WPLT_NOTIFY) {
-	function notify_on_post_update($post_id) {
+	function notify_on_post_update($new_status, $old_status, $post_id) {
 
 		/**
 		 * Not a post revision
@@ -182,8 +182,18 @@ if (defined('WPLT_NOTIFY') && WPLT_NOTIFY) {
 			}
 			$post_title = get_the_title($post_id);
 			$post_url = get_permalink($post_id);
-			$subject = get_bloginfo('name') . ': A post has been updated.';
-			$message = "The page '" . $post_title . "' (" . $post_url . ") has been updated" . $author . ".";
+
+			/**
+			 * Building the subject and body depending on
+			 * post status transition.
+			 */
+			if (is_new_post($new_status,$old_status)) {
+				$subject = get_bloginfo('name') . ': A new post has been published';
+				$message = "A new post, '" . $post_title . "' (" . $post_url . "), has been published" . $author . ".";
+			} else {
+				$subject = get_bloginfo('name') . ': A post has been updated';
+				$message = "The post '" . $post_title . "' (" . $post_url . ") has been updated" . $author . ".";
+			}
 
 			/**
 			 * Send email to admin.
@@ -191,7 +201,22 @@ if (defined('WPLT_NOTIFY') && WPLT_NOTIFY) {
 			wp_mail(WPLT_NOTIFY, $subject, $message);
 		}
 	}
-	add_action('save_post', 'notify_on_post_update');
+
+	/** 
+	 * Detect if this is a new post or not
+	 */
+	function is_new_post( $new_status, $old_status ) {
+		$published = false;
+		if ( $new_status === 'publish' && $old_status !== 'publish' ) {
+			$published = true;
+		}
+		return $published;
+	}
+
+	/** 
+	 * Send email when a post status changes
+	 */
+	add_action( 'transition_post_status', 'notify_on_post_update', 10, 3 );
 }
 
 /**
