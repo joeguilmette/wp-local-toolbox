@@ -12,9 +12,9 @@ if (defined('WPLT_SERVER') && WPLT_SERVER) {
 	if (strtoupper(WPLT_SERVER) != 'LIVE' && strtoupper(WPLT_SERVER) != 'PRODUCTION') {
 		/**
 		 * Everything except PRODUCTION/LIVE Environment
-		 *
-		 * Hide from robots
 		 */
+		
+		// Hide from robots
 		add_filter('pre_option_blog_public', '__return_zero');
 
 	} else {
@@ -32,7 +32,8 @@ if (defined('WPLT_SERVER') && WPLT_SERVER) {
 		$env_text = strtoupper(WPLT_SERVER);
 
 		$admin_notice = array(
-			'parent' => 'top-secondary', /** puts it on the right side. */
+			// puts it on the right side.
+			'parent' => 'top-secondary',
 			'id' => 'environment-notice',
 			'title' => '<span>' . $env_text . ' SERVER</span>',
 		);
@@ -40,9 +41,7 @@ if (defined('WPLT_SERVER') && WPLT_SERVER) {
 		$wp_admin_bar->add_menu($admin_notice);
 	}
 
-	/**
-	 * Style the admin bar
-	 */
+	// Style the admin bar
 	function environment_notice_css() {
 
 		if (defined('WPLT_COLOR') && WPLT_COLOR) {
@@ -89,9 +88,7 @@ if (defined('WPLT_SERVER') && WPLT_SERVER) {
 </style>";
 	}
 
-	/**
-	 * Literally cannot even
-	 */
+	// Literally cannot even
 	function goodbye_howdy($wp_admin_bar) {
 		if (is_user_logged_in()) {
 			$my_account = $wp_admin_bar->get_node('my-account');
@@ -105,9 +102,7 @@ if (defined('WPLT_SERVER') && WPLT_SERVER) {
 
 	function wplt_server_init() {
 
-		/**
-		 * Control the frontend admin bar
-		 */
+		// Control the frontend admin bar
 		if (defined('WPLT_ADMINBAR') && WPLT_ADMINBAR) {
 			if (strtoupper(WPLT_ADMINBAR) == 'FALSE') {
 				add_filter('show_admin_bar', '__return_false');
@@ -135,20 +130,14 @@ if (defined('WPLT_SERVER') && WPLT_SERVER) {
 
 		if (is_admin_bar_showing()) {
 			
-			/**
-			 * Add the environment to the admin panel
-			 */
+			// Add the environment to the admin panel
 			add_action('admin_bar_menu', 'environment_notice');
 
-			/**
-			 * Add CSS to admin and wp head
-			 */
+			// Add CSS to admin and wp head
 			add_action('admin_head', 'environment_notice_css');
 			add_action('wp_head', 'environment_notice_css');
 
-			/**
-			 * Cannot. Even.
-			 */
+			// Cannot. Even.
 			add_filter('admin_bar_menu', 'goodbye_howdy', 25);
 		}
 	}
@@ -162,51 +151,37 @@ if (defined('WPLT_SERVER') && WPLT_SERVER) {
  */
 
 if (defined('WPLT_NOTIFY') && WPLT_NOTIFY) {
-
-	/** 
-	 * Send notification when a post status changes
-	 */
+ 
+	// Send notification when a post status changes
 	add_action( 'transition_post_status', 'notify_on_post_update', 10, 3 );
 	
-	/**
-	 * Send a notification for new attachments, unless we don't want to
-	 */
+	// Send a notification for new attachments, unless we don't want to
 	if (defined('WPLT_DISABLE_ATTACHMENT_NOTIFY') && WPLT_DISABLE_ATTACHMENT_NOTIFY) {
 		return;
 	} else {
 		add_action( 'add_attachment','notify_on_attachment_update', 1, 1);
 	}
 
-	/**
-	 * The add_attachment hook doesn't return the post status, so we'll just
-	 * assume that it's a new attachment and off we go.
-	 */
+	// The add_attachment hook doesn't return the post status, so we'll just
+	// assume that it's a new attachment and off we go.
 	function notify_on_attachment_update($post_id) {
 		notify_on_post_update('publish','new',$post_id);
 	}
 
-	/**
-	 * The mean of WPLT_NOTIFY. This will check to see if we've set a Slack API
-	 * key, and if not, we'll assume we've set an email address.
-	 */
+	// The mean of WPLT_NOTIFY. This will check to see if we've set a Slack API
+	// key, and if not, we'll assume we've set an email address.
 	function notify_on_post_update($new_status, $old_status, $post_id) {
 
-		/**
-		 * Not a post revision
-		 */
+		// Not a post revision
 		if (wp_is_post_revision($post_id)) {
 			return;
 		}
 
-		/**
-		 * And only if it's published
-		 */
+		// And only if it's published
 		if (get_post_status($post_id) == 'publish') {
 
-			/**
-			 * Only look for the author if it's not an attachment, and only 
-			 * tell us about the author if he has a name.
-			 */
+			// Only look for the author if it's not an attachment, and only 
+			// tell us about the author if he has a name.
 			if (get_post_type( $post_id ) != 'attachment' ) {
 				if (get_the_modified_author($post_id) != null) {
 					$author = " by " . get_the_modified_author($post_id);
@@ -215,16 +190,12 @@ if (defined('WPLT_NOTIFY') && WPLT_NOTIFY) {
 				$author = null;
 			}
 
-			/**
-			 * Some useful variables for building our messages.
-			 */
+			// Some useful variables for building our messages.
 			$post_title = get_the_title( $post_id );
 			$post_url = get_permalink( $post_id );
 			$post_type = ucwords(get_post_type( $post_id ));
 
-			/**
-			 * Building the subject and body depending on whether this is a new post or not.
-			 */
+			// Building the subject and body depending on whether this is a new post or not.
 			if (is_new_post($new_status,$old_status)) {
 				$title = "New " . $post_type;
 				$short_message = "New " . $post_type . " Added" . ucwords($author);
@@ -237,14 +208,10 @@ if (defined('WPLT_NOTIFY') && WPLT_NOTIFY) {
 
 			$subject = get_bloginfo('name') . ': ' . $short_message;
 
-			/**
-			 * Check if it's a Slack Webhook URL
-			 */
+			// Check if it's a Slack Webhook URL
 			if (strpos(WPLT_NOTIFY,'hooks.slack.com') !== false) {
 				
-				/**
-				 * Check if we've defined a Slack channel
-				 */
+				// Check if we've defined a Slack channel
 				$bot_args = array( 
 					'attachments' => array(
 						0 => array(
@@ -261,24 +228,19 @@ if (defined('WPLT_NOTIFY') && WPLT_NOTIFY) {
 					'username' => get_bloginfo( 'name' ),
 					'unfurl_links' => true,
 				);
-				/**
-				 * Check if we've defined a Slack channel. If we have, slip the
-				 * channel into our Slack payload.
-				 */
+
+				// Check if we've defined a Slack channel. If we have, slip the
+				// channel into our Slack payload.
 				if (defined('WPLT_NOTIFY_CHANNEL') && WPLT_NOTIFY_CHANNEL) {
 					$bot_args['channel'] = WPLT_NOTIFY_CHANNEL;
 				}
 
 				$payload = array( 'payload' => json_encode( $bot_args ) );
 				
-				/**
-				 * Send the payload to Slack.
-				 */
+				// Send the payload to Slack.
 				$posting = wp_remote_post( WPLT_NOTIFY, array( 'body' => $payload ) );
 
-			/**
-			 * If it's not a Slack Webhook URL, send an email instead.
-			 */
+			// If it's not a Slack Webhook URL, send an email instead.
 			} else {
 
 				wp_mail(WPLT_NOTIFY, $subject, $email_body);
@@ -286,10 +248,8 @@ if (defined('WPLT_NOTIFY') && WPLT_NOTIFY) {
 			}
 		} // end if (get_post_status($post_id) == 'publish')
 	} // end function notify_on_post_update
-
-	/** 
-	 * Detect if this is a new post or not.
-	 */
+ 
+	// Detect if this is a new post or not.
 	function is_new_post( $new_status, $old_status ) {
 		$published = false;
 		if ( $new_status === 'publish' && $old_status !== 'publish' ) {
@@ -307,9 +267,9 @@ if (defined('WPLT_NOTIFY') && WPLT_NOTIFY) {
 
 if (defined('WPLT_AIRPLANE') && WPLT_AIRPLANE) {
 
-	/**
-	 * Pretty sure this is just leftovers from /norcross/airplane-mode. Scared.
-	 */
+	// Pretty sure this is just leftovers from /norcross/airplane-mode.
+	// Scared to delete.
+	// Lazy to test.
 	if (!defined('AIRMDE_BASE ')) {
 		define('AIRMDE_BASE', plugin_basename(__FILE__));
 	}
@@ -320,9 +280,7 @@ if (defined('WPLT_AIRPLANE') && WPLT_AIRPLANE) {
 		define('AIRMDE_VER', '0.0.1');
 	}
 
-	/**
-	 * Include Airplane_Mode_Core Class
-	 */
+	// Include Airplane_Mode_Core Class
 	require_once __DIR__ . '/inc/WPLT_Airplane_Mode_Core.php';
 	$Airplane_Mode_Core = WPLT_Airplane_Mode_Core::getInstance();
 
