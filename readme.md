@@ -22,7 +22,8 @@ Change the color of your admin bar and display the name of the current server en
 * **WPLT_ADMINBAR**: Show or hide the admin bar on the frontend. `FALSE` will force it to be hidden, `TRUE` will force it to display, `ALWAYS` will display the admin bar even when logged out. These settings will override the 'Show toolbar' setting in the 'Users > Your Profile' options panel and `add_filter('show_admin_bar', '__return_false');` in functions.php, but doesn't attempt to overcome any CSS based hiding of the admin bar.
 
 ** In wp-config.php: **
-`
+
+```
 // set server environment to 'LOCAL'
 define('WPLT_SERVER', 'local');
 
@@ -31,7 +32,7 @@ define('WPLT_COLOR', 'purple');
 
 // show the admin bar even when logged out
 define('WPLT_ADMINBAR', 'always');
-`
+```
 
 ##Disable Plugins
 
@@ -43,7 +44,7 @@ In order for this feature to function properly, WP Local Toolbox must be install
 
 ** In wp-config.php **:
 
-`
+```
 // deactivate a set of plugins
 define('WPLT_DISABLED_PLUGINS', serialize(
 	array(
@@ -53,7 +54,7 @@ define('WPLT_DISABLED_PLUGINS', serialize(
 		'wordpress-https/wordpress-https.php'
 	)
 ));
-`
+```
 
 ##Post Update Notifications
 
@@ -69,7 +70,7 @@ This is helpful in production to see if a client has submitted a new post, or in
 
 ** In wp-config.php **:
 
-`
+```
 // send an email to someone@somewhere.com 
 // whenever any post or page is updated
 define('WPLT_NOTIFY','someone@somewhere.com')
@@ -77,7 +78,7 @@ define('WPLT_NOTIFY','someone@somewhere.com')
 // or, send a notification to a Slack channel
 define('WPLT_NOTIFY', 'https://hooks.slack.com/services/etc');
 define('WPLT_NOTIFY_CHANNEL','#channel');
-`
+```
 
 ##Airplane Mode
 
@@ -89,10 +90,10 @@ On and Off: Can be toggled from the admin bar by clicking 'Airplane Mode'. In th
 
 ** In wp-config.php **:
 
-`
+```
 // enable the Airplane Mode toggle
 define('WPLT_AIRPLANE', 'true');
-`
+```
 
 ##Modification
 
