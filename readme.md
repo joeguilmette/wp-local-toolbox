@@ -2,12 +2,9 @@
 
 A simple plugin to help manage development over local, staging and production servers.
 
-Available on WordPress.org: https://wordpress.org/plugins/wp-local-toolbox/
-
-##Description
 Through constants defined in wp-config, you can disable plugins, disable the  loading of external files, set search engine visibility, display or hide the admin bar, display the server name and change the color of the admin bar, or literally anything else you can think of. All without touching the database, so you can push and pull without worrying.
 
-This is an invaluable tool if you often work in production, staging, and local servers at the same time.
+Available on WordPress.org: https://wordpress.org/plugins/wp-local-toolbox/
 
 ##Admin Bar
 
