@@ -21,7 +21,7 @@ Change the color of your admin bar and display the name of the current server en
 
 * **WPLT_ADMINBAR**: Show or hide the admin bar on the frontend. `FALSE` will force it to be hidden, `TRUE` will force it to display, `ALWAYS` will display the admin bar even when logged out. These settings will override the 'Show toolbar' setting in the 'Users > Your Profile' options panel and `add_filter('show_admin_bar', '__return_false');` in functions.php, but doesn't attempt to overcome any CSS based hiding of the admin bar.
 
-** In wp-config.php: **
+**In wp-config.php:**
 
 ```
 // set server environment to 'LOCAL'
@@ -42,7 +42,7 @@ In order for this feature to function properly, WP Local Toolbox must be install
 
 * **WPLT_DISABLED_PLUGINS**: A serialized array of plugins to disable.
 
-** In wp-config.php **:
+**In wp-config.php**:
 
 ```
 // deactivate a set of plugins
@@ -68,7 +68,7 @@ This is helpful in production to see if a client has submitted a new post, or in
 
 * **WPLT_DISABLE_ATTACHMENT_NOTIFY**: If set, this will disable notifications for attachments.
 
-** In wp-config.php **:
+**In wp-config.php**:
 
 ```
 // send an email to someone@somewhere.com 
@@ -88,7 +88,7 @@ On and Off: Can be toggled from the admin bar by clicking 'Airplane Mode'. In th
 
 * **WPLT_AIRPLANE**: Set this to anything to enable the Airpane Mode toggle.
 
-** In wp-config.php **:
+**In wp-config.php**:
 
 ```
 // enable the Airplane Mode toggle
