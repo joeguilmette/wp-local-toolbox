@@ -9,7 +9,9 @@ Through constants defined in wp-config, you can disable plugins, disable the  lo
 
 This is an invaluable tool if you often work in production, staging, and local servers at the same time.
 
-##Constants
+##Admin Bar
+
+Change the color of your admin bar and display the name of the current server environment. Green for local, orange for staging, and of course, red for production. You can also force the front end admin bar to hide, to display, and can even set it to display when logged out.
 
 * **WPLT_SERVER**: The name of your server environment. It will be displayed in the admin bar at browser widths greater than 1030px. If left undefined, the plugin will make no changes to the admin bar. 
 
@@ -23,23 +25,8 @@ This is an invaluable tool if you often work in production, staging, and local s
 
 * **WPLT_ADMINBAR**: Show or hide the admin bar on the frontend. `FALSE` will force it to be hidden, `TRUE` will force it to display, `ALWAYS` will display the admin bar even when logged out. These settings will override the 'Show toolbar' setting in the 'Users > Your Profile' options panel and `add_filter('show_admin_bar', '__return_false');` in functions.php, but doesn't attempt to overcome any CSS based hiding of the admin bar.
 
-* **WPLT_DISABLED_PLUGINS**: An array of plugins to disable. This does not store any data in the database, so plugins that are manually deactivated or activated will stay so when undefined in this constant. **Note: In order for this to function properly, WP Local Toolbox must be installed as an mu-plugin. You can read more about mu-plugins here: [https://codex.wordpress.org/Must_Use_Plugins](https://codex.wordpress.org/Must_Use_Plugins)**. We're investigating ways to avoid this requirement; if you have any ideas we'd love to hear it!
-
-* **WPLT_NOTIFY**: Define this constant as the email address where you'd like to be notified of post updates. You can specify either an email address or a Slack Incoming WebHook URL. You can set up a Slack Incoming WebHook URL here: https://my.slack.com/services/new/incoming-webhook/
-
-	This is helpful in production to see if a client has submitted a new post, or in development to see if data is being added to the staging environment so you don't accidentally overwrite new posts when pushing databases around.
-
-* **WPLT_NOTIFY_CHANNEL**: If WPLT_NOTIFY is set to a Slack Incoming WebHook URL, you can specify the channel that the notification will be posted to. If left unset, it will post to the default channel specified in Slack's Incoming WebHooks settings page.
-
-* **WPLT_DISABLE_ATTACHMENT_NOTIFY**: If set, this will disable notifications for attachments.
-
-* **WPLT_AIRPLANE**: Control loading of external files when developing locally. WP loads certain external files (fonts, gravatar, etc) and makes external HTTP calls. This isn't usually an issue, unless you're working in an evironment without a web connection. This plugin removes / unhooks those actions to reduce load time and avoid errors due to missing files.
-
-	On and Off: Can be toggled from the admin bar by clicking 'Airplane Mode'. In the admin bar a ✗ or ✓ will indicate if Airplane Mode is enabled or disabled. 
-
-##Example wp-config.php Entries
-
-```
+** In wp-config.php: **
+`
 // set server environment to 'LOCAL'
 define('WPLT_SERVER', 'local');
 
@@ -48,21 +35,45 @@ define('WPLT_COLOR', 'purple');
 
 // show the admin bar even when logged out
 define('WPLT_ADMINBAR', 'always');
+`
 
+##Disable Plugins
+
+Pass a serialized array in this constant to disable plugins. This does not store any data in the database, so plugins that are manually deactivated or activated through the admin panel will stay so.
+
+In order for this feature to function properly, WP Local Toolbox must be installed as an mu-plugin. You can read more about mu-plugins here: https://codex.wordpress.org/Must_Use_Plugins. We're investigating ways to avoid this requirement; if you have any ideas we'd love to hear it!
+
+* **WPLT_DISABLED_PLUGINS**: A serialized array of plugins to disable.
+
+** In wp-config.php **:
+
+`
 // deactivate a set of plugins
 define('WPLT_DISABLED_PLUGINS', serialize(
 	array(
+		'hello-dolly.php',
 		'w3-total-cache/w3-total-cache.php',
 		'updraftplus/updraftplus.php',
-		'nginx-helper/nginx-helper.php',
-		'wpremote/plugin.php',
-		'wordpress-https/wordpress-https.php',
+		'wordpress-https/wordpress-https.php'
 	)
 ));
+`
 
-// enable the Airplane Mode toggle
-define('WPLT_AIRPLANE', 'true');
+##Post Update Notifications
 
+Receive notifications when any page, post, or attachment is added or updated. Notifications can be received via email, or can be sent to a Slack channel via their Incoming WebHook API.
+
+This is helpful in production to see if a client has submitted a new post, or in development to see if data is being added to the staging environment so you don't accidentally overwrite new posts when pushing databases around.
+
+* **WPLT_NOTIFY**: Define this constant as the email address where you'd like to be notified of post updates. You can specify either an email address or a Slack Incoming WebHook URL. You can set up a Slack Incoming WebHook URL here: https://my.slack.com/services/new/incoming-webhook/
+
+* **WPLT_NOTIFY_CHANNEL**: If WPLT_NOTIFY is set to a Slack Incoming WebHook URL, you can specify the channel that the notification will be posted to. If left unset, it will post to the default channel specified in Slack's Incoming WebHooks settings page.
+
+* **WPLT_DISABLE_ATTACHMENT_NOTIFY**: If set, this will disable notifications for attachments.
+
+** In wp-config.php **:
+
+`
 // send an email to someone@somewhere.com 
 // whenever any post or page is updated
 define('WPLT_NOTIFY','someone@somewhere.com')
@@ -71,7 +82,21 @@ define('WPLT_NOTIFY','someone@somewhere.com')
 define('WPLT_NOTIFY', 'https://hooks.slack.com/services/etc');
 define('WPLT_NOTIFY_CHANNEL','#channel');
 `
-```
+
+##Airplane Mode
+
+Control loading of external files when developing locally. WP loads certain external files (fonts, gravatar, etc) and makes external HTTP calls. This isn't usually an issue, unless you're working in an evironment without a web connection. This plugin removes / unhooks those actions to reduce load time and avoid errors due to missing files.
+
+On and Off: Can be toggled from the admin bar by clicking 'Airplane Mode'. In the admin bar a ✗ or ✓ will indicate if Airplane Mode is enabled or disabled. 
+
+* **WPLT_AIRPLANE**: Set this to anything to enable the Airpane Mode toggle.
+
+** In wp-config.php **:
+
+`
+// enable the Airplane Mode toggle
+define('WPLT_AIRPLANE', 'true');
+`
 
 ##Modification
 
