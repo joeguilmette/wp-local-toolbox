@@ -1,8 +1,8 @@
 === WP Local Toolbox ===
 Contributors: joeguilmette,jb510
 Tags: admin,administration,responsive,dashboard,notification,simple, develop, developer, developing, development
-Tested up to: 4.2
-Stable tag: 1.2
+Tested up to: 4.2.1
+Stable tag: 1.2.1
 License: GPL v2+
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -29,7 +29,8 @@ Change the color of your admin bar and display the name of the current server en
 
 * **WPLT_ADMINBAR**: Show or hide the admin bar on the frontend. `FALSE` will force it to be hidden, `TRUE` will force it to display, `ALWAYS` will display the admin bar even when logged out. These settings will override the 'Show toolbar' setting in the 'Users > Your Profile' options panel and `add_filter('show_admin_bar', '__return_false');` in functions.php, but doesn't attempt to overcome any CSS based hiding of the admin bar.
 
-** In wp-config.php: **
+**In wp-config.php:**
+
 `
 // set server environment to 'LOCAL'
 define('WPLT_SERVER', 'local');
@@ -49,7 +50,7 @@ In order for this feature to function properly, WP Local Toolbox must be install
 
 * **WPLT_DISABLED_PLUGINS**: A serialized array of plugins to disable.
 
-** In wp-config.php **:
+**In wp-config.php**:
 
 `
 // deactivate a set of plugins
@@ -75,7 +76,7 @@ This is helpful in production to see if a client has submitted a new post, or in
 
 * **WPLT_DISABLE_ATTACHMENT_NOTIFY**: If set, this will disable notifications for attachments.
 
-** In wp-config.php **:
+**In wp-config.php**:
 
 `
 // send an email to someone@somewhere.com 
@@ -95,7 +96,7 @@ On and Off: Can be toggled from the admin bar by clicking 'Airplane Mode'. In th
 
 * **WPLT_AIRPLANE**: Set this to anything to enable the Airpane Mode toggle.
 
-** In wp-config.php **:
+**In wp-config.php**:
 
 `
 // enable the Airplane Mode toggle
@@ -139,5 +140,21 @@ You're welcome.
 
 * A healthy refactoring from [Jon Brown](https://twitter.com/jb510) of [9seeds](http://9seeds.com/)
 
+== Changelog ==
+= 1.2.1 =
+* Added support for Slack API with WPLT_NOTIFY
+* Enhanced WPLT_NOTIFY to correctly report all post types
+* Added a WPLT_ADMINBAR to control front end admin bar - it can now be:
+	* Forced to be hidden
+	* Forced to display
+	* Forced to display even when logged out
+* Continued tradition of 30:1 readme:code commits
+
+= 1.2 =
+* Added to WordPress Plugin Repository
+
 == Installation ==
 After installation, you must define constants in the wp-config.php file.
+
+In order for the Disable Plugins feature to function properly, WP Local Toolbox must be installed as an mu-plugin. You can read more about mu-plugins here: https://codex.wordpress.org/Must_Use_Plugins. We're investigating ways to avoid this requirement; if you have any ideas we'd love to hear it!
+

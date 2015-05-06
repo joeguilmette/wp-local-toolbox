@@ -162,6 +162,33 @@ if (defined('WPLT_SERVER') && WPLT_SERVER) {
  */
 
 if (defined('WPLT_NOTIFY') && WPLT_NOTIFY) {
+
+	/** 
+	 * Send notification when a post status changes
+	 */
+	add_action( 'transition_post_status', 'notify_on_post_update', 10, 3 );
+	
+	/**
+	 * Send a notification for new attachments, unless we don't want to
+	 */
+	if (defined('WPLT_DISABLE_ATTACHMENT_NOTIFY') && WPLT_DISABLE_ATTACHMENT_NOTIFY) {
+		return;
+	} else {
+		add_action( 'add_attachment','notify_on_attachment_update', 1, 1);
+	}
+
+	/**
+	 * The add_attachment hook doesn't return the post status, so we'll just
+	 * assume that it's a new attachment and off we go.
+	 */
+	function notify_on_attachment_update($post_id) {
+		notify_on_post_update('publish','new',$post_id);
+	}
+
+	/**
+	 * The mean of WPLT_NOTIFY. This will check to see if we've set a Slack API
+	 * key, and if not, we'll assume we've set an email address.
+	 */
 	function notify_on_post_update($new_status, $old_status, $post_id) {
 
 		/**
@@ -177,7 +204,7 @@ if (defined('WPLT_NOTIFY') && WPLT_NOTIFY) {
 		if (get_post_status($post_id) == 'publish') {
 
 			/**
-			 * Only check if it's not an attachment, and only 
+			 * Only look for the author if it's not an attachment, and only 
 			 * tell us about the author if he has a name.
 			 */
 			if (get_post_type( $post_id ) != 'attachment' ) {
@@ -188,22 +215,27 @@ if (defined('WPLT_NOTIFY') && WPLT_NOTIFY) {
 				$author = null;
 			}
 
-			$post_title = get_the_title($post_id);
-			$post_url = get_permalink($post_id);
+			/**
+			 * Some useful variables for building our messages.
+			 */
+			$post_title = get_the_title( $post_id );
+			$post_url = get_permalink( $post_id );
+			$post_type = ucwords(get_post_type( $post_id ));
 
 			/**
 			 * Building the subject and body depending on whether this is a new post or not.
 			 */
-			if (get_post_type($post_id) == 'attachment') {
-				$subject = get_bloginfo('name') . ': A new attachment has been uploaded';
-				$message = "A new attachment, '" . $post_title . "' (" . $post_url . "), has been uploaded" . $author . ".\n\nView the attachment here: ".wp_get_attachment_url( $post_id );
-			} elseif (is_new_post($new_status,$old_status)) {
-				$subject = get_bloginfo('name') . ': A new post has been published';
-				$message = "A new post, '" . $post_title . "' (" . $post_url . "), has been published" . $author . ".";
+			if (is_new_post($new_status,$old_status)) {
+				$title = "New " . $post_type;
+				$short_message = "New " . $post_type . " Added" . ucwords($author);
+				$email_body = "A new " . strtolower($post_type) . ", '" . $post_title . "' (" . $post_url . "), has been published" . $author . ".";
 			} else {
-				$subject = get_bloginfo('name') . ': A post has been updated';
-				$message = "The post '" . $post_title . "' (" . $post_url . ") has been updated" . $author . ".";
+				$title = "Updated " . $post_type;
+				$short_message = $post_type . " Updated" . ucwords($author);
+				$email_body = "The " . strtolower($post_type) . " '" . $post_title . "' (" . $post_url . ") has been updated" . $author . ".";
 			}
+
+			$subject = get_bloginfo('name') . ': ' . $short_message;
 
 			/**
 			 * Check if it's a Slack Webhook URL
@@ -213,47 +245,50 @@ if (defined('WPLT_NOTIFY') && WPLT_NOTIFY) {
 				/**
 				 * Check if we've defined a Slack channel
 				 */
+				$bot_args = array( 
+					'attachments' => array(
+						0 => array(
+							'fallback' => $short_message,
+							'color' => '#F40101',
+							'author_name' => $short_message,
+							'author_link' => $post_url,
+							'title' => $post_title,
+							'title_link' => $post_url,
+							'text' => $post_url,
+						),
+					),
+					'icon_emoji' => ':triangular_flag_on_post:',
+					'username' => get_bloginfo( 'name' ),
+					'unfurl_links' => true,
+				);
+				/**
+				 * Check if we've defined a Slack channel. If we have, slip the
+				 * channel into our Slack payload.
+				 */
 				if (defined('WPLT_NOTIFY_CHANNEL') && WPLT_NOTIFY_CHANNEL) {
-					$bot_args = array(
-						'icon_emoji' => ':triangular_flag_on_post:',
-						'channel' => WPLT_NOTIFY_CHANNEL,
-						'username' => get_bloginfo( 'name' ),
-						'text' => $message,
-						'unfurl_links' => true
-					);
-				} else {
-					$bot_args = array(
-						'icon_emoji' => ':triangular_flag_on_post:',
-						'username' => get_bloginfo( 'name' ),
-						'text' => $message,
-						'unfurl_links' => true
-					);
+					$bot_args['channel'] = WPLT_NOTIFY_CHANNEL;
 				}
 
 				$payload = array( 'payload' => json_encode( $bot_args ) );
 				
 				/**
-				 * Send the payload to Slack
+				 * Send the payload to Slack.
 				 */
 				$posting = wp_remote_post( WPLT_NOTIFY, array( 'body' => $payload ) );
 
 			/**
-			 * If it's not a Slack Webhook URL, send an email instead
+			 * If it's not a Slack Webhook URL, send an email instead.
 			 */
 			} else {
 
-				wp_mail(WPLT_NOTIFY, $subject, $message);
+				wp_mail(WPLT_NOTIFY, $subject, $email_body);
 
 			}
 		} // end if (get_post_status($post_id) == 'publish')
 	} // end function notify_on_post_update
 
-	function notify_on_attachment_update($post_id) {
-		notify_on_post_update('new','publish',$post_id);
-	}
-
 	/** 
-	 * Detect if this is a new post or not
+	 * Detect if this is a new post or not.
 	 */
 	function is_new_post( $new_status, $old_status ) {
 		$published = false;
@@ -261,17 +296,6 @@ if (defined('WPLT_NOTIFY') && WPLT_NOTIFY) {
 			$published = true;
 		}
 		return $published;
-	}
-
-	/** 
-	 * Send email when a post status changes
-	 */
-	add_action( 'transition_post_status', 'notify_on_post_update', 10, 3 );
-	
-	if (defined('WPLT_DISABLE_ATTACHMENT_NOTIFY') && WPLT_DISABLE_ATTACHMENT_NOTIFY) {
-		return;
-	} else {
-		add_action( 'add_attachment','notify_on_attachment_update', 1, 1);
 	}
 }
 
@@ -283,6 +307,9 @@ if (defined('WPLT_NOTIFY') && WPLT_NOTIFY) {
 
 if (defined('WPLT_AIRPLANE') && WPLT_AIRPLANE) {
 
+	/**
+	 * Pretty sure this is leftovers from /norcross/airplane-mode. Scared.
+	 */
 	if (!defined('AIRMDE_BASE ')) {
 		define('AIRMDE_BASE', plugin_basename(__FILE__));
 	}
@@ -329,9 +356,6 @@ if (defined('WPLT_AIRPLANE') && WPLT_AIRPLANE) {
  */
 if (defined('WPLT_DISABLED_PLUGINS') && WPLT_DISABLED_PLUGINS) {
 
-	/**
-	 * Include
-	 */
 	require_once __DIR__ . '/inc/WPLT_Disable_Plugins.php';
 	new WPLT_Disable_Plugins(unserialize(WPLT_DISABLED_PLUGINS));
 }
