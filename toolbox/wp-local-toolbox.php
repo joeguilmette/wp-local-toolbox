@@ -134,6 +134,7 @@ if (defined('WPLT_SERVER') && WPLT_SERVER) {
 		}
 
 		if (is_admin_bar_showing()) {
+			
 			/**
 			 * Add the environment to the admin panel
 			 */
@@ -174,6 +175,7 @@ if (defined('WPLT_NOTIFY') && WPLT_NOTIFY) {
 		 * And only if it's published
 		 */
 		if (get_post_status($post_id) == 'publish') {
+
 			/**
 			 * Only check if it's not an attachment, and only 
 			 * tell us about the author if he has a name.
@@ -192,7 +194,6 @@ if (defined('WPLT_NOTIFY') && WPLT_NOTIFY) {
 			/**
 			 * Building the subject and body depending on whether this is a new post or not.
 			 */
-			
 			if (get_post_type($post_id) == 'attachment') {
 				$subject = get_bloginfo('name') . ': A new attachment has been uploaded';
 				$message = "A new attachment, '" . $post_title . "' (" . $post_url . "), has been uploaded" . $author . ".\n\nView the attachment here: ".wp_get_attachment_url( $post_id );
@@ -210,7 +211,7 @@ if (defined('WPLT_NOTIFY') && WPLT_NOTIFY) {
 			if (strpos(WPLT_NOTIFY,'hooks.slack.com') !== false) {
 				
 				/**
-				 * Check if we've defined a channel
+				 * Check if we've defined a Slack channel
 				 */
 				if (defined('WPLT_NOTIFY_CHANNEL') && WPLT_NOTIFY_CHANNEL) {
 					$bot_args = array(
@@ -230,6 +231,7 @@ if (defined('WPLT_NOTIFY') && WPLT_NOTIFY) {
 				}
 
 				$payload = array( 'payload' => json_encode( $bot_args ) );
+				
 				/**
 				 * Send the payload to Slack
 				 */
@@ -265,6 +267,7 @@ if (defined('WPLT_NOTIFY') && WPLT_NOTIFY) {
 	 * Send email when a post status changes
 	 */
 	add_action( 'transition_post_status', 'notify_on_post_update', 10, 3 );
+	
 	if (defined('WPLT_DISABLE_ATTACHMENT_NOTIFY') && WPLT_DISABLE_ATTACHMENT_NOTIFY) {
 		return;
 	} else {
