@@ -62,6 +62,9 @@ class WPLT_Airplane_Mode_Core {
 		add_filter('get_avatar', array($this, 'replace_gravatar'), 1, 5);
 		add_filter('map_meta_cap', array($this, 'prevent_auto_updates'), 10, 2);
 		add_filter('default_avatar_select', array($this, 'default_avatar'));
+		
+		// add body class for plugin page so CSS can clean it up
+		add_filter( 'admin_body_class', array( $this, 'admin_body_class'));
 
 		// kill all the http requests
 		add_filter('pre_http_request', array($this, 'disable_http_reqs'), 10, 3);
@@ -314,6 +317,15 @@ class WPLT_Airplane_Mode_Core {
 	 */
 	public function block_oembed_html($html, $url, $attr, $post_ID) {
 		return $this->enabled() ? sprintf('<div class="loading-placeholder airplane-mode-placeholder"><p>%s</p></div>', sprintf(__('Airplane Mode is enabled. oEmbed blocked for %1$s.', 'airplane-mode'), esc_url($url))) : $html;
+	}
+
+	/**
+	 * Add body class to admin pages based on plugin status
+	 *
+	 * @return string          our new class appended to the existing string
+	 */
+	public function admin_body_class() {
+		return $this->enabled() ? 'airplane-mode-enabled' : 'airplane-mode-disabled';
 	}
 
 	/**

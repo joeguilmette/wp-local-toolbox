@@ -308,7 +308,7 @@ if (defined('WPLT_NOTIFY') && WPLT_NOTIFY) {
 if (defined('WPLT_AIRPLANE') && WPLT_AIRPLANE) {
 
 	/**
-	 * Pretty sure this is leftovers from /norcross/airplane-mode. Scared.
+	 * Pretty sure this is just leftovers from /norcross/airplane-mode. Scared.
 	 */
 	if (!defined('AIRMDE_BASE ')) {
 		define('AIRMDE_BASE', plugin_basename(__FILE__));
@@ -341,6 +341,7 @@ if (defined('WPLT_AIRPLANE') && WPLT_AIRPLANE) {
 	#wp-admin-bar-airplane-mode-toggle span.airplane-toggle-icon { padding-right: 3px }
 	#wp-admin-bar-airplane-mode-toggle span.airplane-toggle-icon-on:before { content: '✓' }
 	#wp-admin-bar-airplane-mode-toggle span.airplane-toggle-icon-off:before { content: '✗' }
+	.airplane-mode-enabled .plugin-install-php a.upload.add-new-h2,.airplane-mode-enabled .theme-browser.content-filterable.rendered,.airplane-mode-enabled .wp-filter,.airplane-mode-enabled a.browse-themes.add-new-h2{display:none!important}
 </style>";
 		}
 	}
