@@ -267,6 +267,33 @@ if (defined('WPLT_NOTIFY') && WPLT_NOTIFY) {
 
 require_once __DIR__ . '/lib/airplane-mode/airplane-mode.php';
 
+// load our own CSS
+add_action('wp_enqueue_scripts','wplt_airplane_css', 99999);
+
+function wplt_airplane_css() {
+//	wp_dequeue_style( 'airplane-mode' );
+
+	remove_action( 'wp_enqueue_scripts',                   array( 'Airplane_Mode_Core', 'toggle_css'              ),  9999    );
+	remove_action( 'admin_enqueue_scripts',                array( 'Airplane_Mode_Core', 'toggle_css'              ),  9999    );
+	remove_action( 'login_enqueue_scripts',                array( 'Airplane_Mode_Core', 'toggle_css'              ),  9999    );
+
+	if (is_admin_bar_showing()) {
+
+	/**
+	 * Some nice readable CSS so no one wonder's what's going on
+	 * when inspecting the head. I think it's best to just jack
+	 * these styles into the head and not bother loading another
+	 * stylesheet.
+	 */
+	echo "
+<!-- WPLT Airplane Mode -->
+<style type='text/css'>
+#wp-admin-bar-airplane-mode-toggle span.airplane-toggle-icon { padding-right: 3px }
+#wp-admin-bar-airplane-mode-toggle span.airplane-toggle-icon-on:before { content: '✓' }
+#wp-admin-bar-airplane-mode-toggle span.airplane-toggle-icon-off:before { content: '✗' }
+.airplane-mode-enabled .plugin-install-php a.upload.add-new-h2,.airplane-mode-enabled .theme-browser.content-filterable.rendered,.airplane-mode-enabled .wp-filter,.airplane-mode-enabled a.browse-themes.add-new-h2{display:none!important}
+</style>";
+	}
 }
 
 /**
