@@ -1,8 +1,8 @@
 === WP Local Toolbox ===
 Contributors: joeguilmette,jb510
 Tags: admin,administration,responsive,dashboard,notification,simple, develop, developer, developing, development
-Tested up to: 4.2.1
-Stable tag: 1.2.1
+Tested up to: 4.2.2
+Stable tag: 1.2.2
 License: GPL v2+
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -141,6 +141,9 @@ You're welcome.
 * A healthy refactoring from [Jon Brown](https://twitter.com/jb510) of [9seeds](http://9seeds.com/)
 
 == Changelog ==
+= 1.2.2 =
+* Update Airplane Mode to latest ([f9e8bc1cc0](https://github.com/norcross/airplane-mode/commit/f9e8bc1cc0a65542af6cfc5e1904ec63fb3819ff))
+
 = 1.2.1 =
 * Added support for Slack API with WPLT_NOTIFY
 * Enhanced WPLT_NOTIFY to correctly report all post types
