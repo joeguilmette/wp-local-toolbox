@@ -265,47 +265,35 @@ if (defined('WPLT_NOTIFY') && WPLT_NOTIFY) {
  * =======================================
  */
 
-if (defined('WPLT_AIRPLANE') && WPLT_AIRPLANE) {
+require_once __DIR__ . '/lib/airplane-mode/airplane-mode.php';
 
-	// Pretty sure this is just leftovers from /norcross/airplane-mode.
-	// Scared to delete.
-	// Lazy to test.
-	if (!defined('AIRMDE_BASE ')) {
-		define('AIRMDE_BASE', plugin_basename(__FILE__));
-	}
-	if (!defined('AIRMDE_DIR')) {
-		define('AIRMDE_DIR', plugin_dir_path(__FILE__));
-	}
-	if (!defined('AIRMDE_VER')) {
-		define('AIRMDE_VER', '0.0.1');
-	}
+// load our own CSS
+add_action('wp_enqueue_scripts','wplt_airplane_css', 99999);
 
-	// Include Airplane_Mode_Core Class
-	require_once __DIR__ . '/inc/WPLT_Airplane_Mode_Core.php';
-	$Airplane_Mode_Core = WPLT_Airplane_Mode_Core::getInstance();
+function wplt_airplane_css() {
+//	wp_dequeue_style( 'airplane-mode' );
 
-	function wplt_airplane_css() {
-		if (is_admin_bar_showing()) {
+	remove_action( 'wp_enqueue_scripts',                   array( 'Airplane_Mode_Core', 'toggle_css'              ),  9999    );
+	remove_action( 'admin_enqueue_scripts',                array( 'Airplane_Mode_Core', 'toggle_css'              ),  9999    );
+	remove_action( 'login_enqueue_scripts',                array( 'Airplane_Mode_Core', 'toggle_css'              ),  9999    );
 
-			/**
-			 * Some nice readable CSS so no one wonder's what's going on
-			 * when inspecting the head. I think it's best to just jack
-			 * these styles into the head and not bother loading another
-			 * stylesheet.
-			 */
-			echo "
+	if (is_admin_bar_showing()) {
+
+	/**
+	 * Some nice readable CSS so no one wonder's what's going on
+	 * when inspecting the head. I think it's best to just jack
+	 * these styles into the head and not bother loading another
+	 * stylesheet.
+	 */
+	echo "
 <!-- WPLT Airplane Mode -->
 <style type='text/css'>
-	#wp-admin-bar-airplane-mode-toggle span.airplane-toggle-icon { padding-right: 3px }
-	#wp-admin-bar-airplane-mode-toggle span.airplane-toggle-icon-on:before { content: '✓' }
-	#wp-admin-bar-airplane-mode-toggle span.airplane-toggle-icon-off:before { content: '✗' }
-	.airplane-mode-enabled .plugin-install-php a.upload.add-new-h2,.airplane-mode-enabled .theme-browser.content-filterable.rendered,.airplane-mode-enabled .wp-filter,.airplane-mode-enabled a.browse-themes.add-new-h2{display:none!important}
+#wp-admin-bar-airplane-mode-toggle span.airplane-toggle-icon { padding-right: 3px }
+#wp-admin-bar-airplane-mode-toggle span.airplane-toggle-icon-on:before { content: '✓' }
+#wp-admin-bar-airplane-mode-toggle span.airplane-toggle-icon-off:before { content: '✗' }
+.airplane-mode-enabled .plugin-install-php a.upload.add-new-h2,.airplane-mode-enabled .theme-browser.content-filterable.rendered,.airplane-mode-enabled .wp-filter,.airplane-mode-enabled a.browse-themes.add-new-h2{display:none!important}
 </style>";
-		}
 	}
-
-	add_action('wp_head', 'wplt_airplane_css');
-	add_action('admin_head', 'wplt_airplane_css');
 }
 
 /**
