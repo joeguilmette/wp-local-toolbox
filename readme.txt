@@ -141,6 +141,9 @@ You're welcome.
 * A healthy refactoring from [Jon Brown](https://twitter.com/jb510) of [9seeds](http://9seeds.com/)
 
 == Changelog ==
+= 1.2.3 =
+* Fix HTTP count for Airplane Mode
+
 = 1.2.2 =
 * Update Airplane Mode to latest ([f9e8bc1cc0](https://github.com/norcross/airplane-mode/commit/f9e8bc1cc0a65542af6cfc5e1904ec63fb3819ff))
 
