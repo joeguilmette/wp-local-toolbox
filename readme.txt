@@ -2,7 +2,7 @@
 Contributors: joeguilmette,jb510
 Tags: admin,administration,responsive,dashboard,notification,simple, develop, developer, developing, development
 Tested up to: 4.2.2
-Stable tag: 1.2.2
+Stable tag: 1.2.3
 License: GPL v2+
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 

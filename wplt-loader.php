@@ -3,7 +3,7 @@
 Plugin Name: WP Local Toolbox
 Description: A simple plugin to set different defaults for production, staging and local servers.
 Author: Joe Guilmette
-Version: 1.2.2
+Version: 1.2.3
 Author URI: http://joeguilmette.com
 Plugin URI: https://github.com/joeguilmette/wp-local-toolbox
 License: GPLv2+

@@ -9,6 +9,31 @@ Requires WP: 3.7
 Author URI: http://reaktivstudios.com/
 GitHub Plugin URI: https://github.com/norcross/airplane-mode
 */
+
+/* 	CHANGES FOR WPLT COMPATIBILITY
+
+	Remove $count from $icon
+	Add $count to end of $title
+	Move $title creation to after $count creation
+
+	// get the HTTP count
+	if ( ! empty( $this->http_count ) ) {
+		$count = '<span class="airplane-http-count">' . number_format_i18n( $this->http_count ) . '</span>';
+		$title .= sprintf( _n( ' There was %s http request.', ' There were %s http requests.', $count, 'airplane-mode' ), $count );
+	} else {
+		$count = '';
+		$title .= __( ' There were no http requests.', 'airplane-mode' );
+	}
+
+	// get my text
+	$text   = __( 'Airplane Mode', 'airplane-mode' ) . $count;
+
+	// get my icon
+	$icon   = '<span class="airplane-toggle-icon ' . sanitize_html_class( $class ) . '"></span>';
+
+
+*/
+
 /*
 The MIT License (MIT)
 
@@ -524,20 +549,20 @@ if ( ! class_exists( 'Airplane_Mode_Core' ) ) {
 			$class  = 'airplane-toggle-icon-';
 			$class .= $status ? 'on' : 'off';
 
-			// get my text
-			$text   = __( 'Airplane Mode', 'airplane-mode' );
-
 			// get the HTTP count
 			if ( ! empty( $this->http_count ) ) {
-				$count = number_format_i18n( $this->http_count );
+				$count = '<span class="airplane-http-count">' . number_format_i18n( $this->http_count ) . '</span>';
 				$title .= sprintf( _n( ' There was %s http request.', ' There were %s http requests.', $count, 'airplane-mode' ), $count );
 			} else {
 				$count = '';
 				$title .= __( ' There were no http requests.', 'airplane-mode' );
 			}
 
+			// get my text
+			$text   = __( 'Airplane Mode', 'airplane-mode' ) . $count;
+
 			// get my icon
-			$icon   = '<span class="airplane-toggle-icon ' . sanitize_html_class( $class ) . '">' . $count . '</span>';
+			$icon   = '<span class="airplane-toggle-icon ' . sanitize_html_class( $class ) . '"></span>';
 
 			// get our link with the status parameter
 			$link   = wp_nonce_url( add_query_arg( 'airplane-mode', $toggle ), 'airmde_nonce', 'airmde_nonce' );

@@ -82,6 +82,17 @@ if (defined('WPLT_SERVER') && WPLT_SERVER) {
 	        font-size: 20px!important;
 	    }
 	}
+	#wp-admin-bar-airplane-mode-toggle span.airplane-http-count {
+	    position: relative;
+	    display: inline-block;
+	    width: 21px;
+	    height: 21px;
+	    line-height: 21px;
+	    margin-left: 3px;
+	    border-radius: 50%;
+	    border: 2px solid #EEE;
+	    text-align: center;
+	}
 	#adminbarsearch:before,
 	.ab-icon:before,
 	.ab-item:before { color: #EEE!important }
