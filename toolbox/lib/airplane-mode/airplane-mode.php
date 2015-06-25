@@ -551,8 +551,9 @@ if ( ! class_exists( 'Airplane_Mode_Core' ) ) {
 
 			// get the HTTP count
 			if ( ! empty( $this->http_count ) ) {
-				$count = '<span class="airplane-http-count">' . number_format_i18n( $this->http_count ) . '</span>';
+				$count = number_format_i18n( $this->http_count );
 				$title .= sprintf( _n( ' There was %s http request.', ' There were %s http requests.', $count, 'airplane-mode' ), $count );
+				$count = '<span class="airplane-http-count">' . $count . '</span>';
 			} else {
 				$count = '';
 				$title .= __( ' There were no http requests.', 'airplane-mode' );
