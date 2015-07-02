@@ -134,3 +134,5 @@ You're welcome.
 
 ##Installation
 After installation, you must define constants in the wp-config.php file.
+
+In order for the Disable Plugins feature to function properly, WP Local Toolbox must be installed as an mu-plugin. You can read more about mu-plugins here: https://codex.wordpress.org/Must_Use_Plugins. We're investigating ways to avoid this requirement; if you have any ideas we'd love to hear it!
