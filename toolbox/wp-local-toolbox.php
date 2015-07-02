@@ -204,7 +204,9 @@ if (defined('WPLT_NOTIFY') && WPLT_NOTIFY) {
 			// Some useful variables for building our messages.
 			$post_title = get_the_title( $post_id );
 			$post_url = get_permalink( $post_id );
-			$post_type = ucwords(get_post_type( $post_id ));
+			$post_type = get_post_type( $post_id );
+			$post_type = get_post_type_object( $post_type );
+			$post_type = ucwords($post_type->labels->singular_name);
 
 			// Building the subject and body depending on whether this is a new post or not.
 			if (is_new_post($new_status,$old_status)) {
