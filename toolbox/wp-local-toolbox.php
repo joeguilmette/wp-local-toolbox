@@ -9,7 +9,7 @@ if (defined('WPLT_SERVER') && WPLT_SERVER) {
 
 	If you come up with something cool I'd love a pull request!
 	 */
-	if (strtoupper(WPLT_SERVER) != 'LIVE' && strtoupper(WPLT_SERVER) != 'PRODUCTION') {
+	if (strtoupper(WPLT_SERVER) != 'LIVE' && strtoupper(WPLT_SERVER) != 'PRODUCTION') && strtoupper(WPLT_FORCE_PUBLIC) != true ) {
 		/**
 		 * Everything except PRODUCTION/LIVE Environment
 		 */
