@@ -14,6 +14,9 @@ if (defined('WPLT_SERVER') && WPLT_SERVER) {
 		 * Everything except PRODUCTION/LIVE Environment
 		 */
 		
+		// Use a high priority of 1000 to give other plugins room to also modify this filter.
+		add_filter( 'wp_mail', 'wplt_email_redirect', 1000, 1 );
+		
 		// Hide from robots
 		add_filter('pre_option_blog_public', '__return_zero');
 
@@ -316,4 +319,21 @@ if (defined('WPLT_DISABLED_PLUGINS') && WPLT_DISABLED_PLUGINS) {
 
 	require_once __DIR__ . '/inc/WPLT_Disable_Plugins.php';
 	new WPLT_Disable_Plugins(unserialize(WPLT_DISABLED_PLUGINS));
+}
+
+
+/**
+ * =======================================
+ * =======Redirect Email on Staging ======
+ * =======================================
+ */
+function wplt_email_redirect( $mail_args ) {
+	$admin_email = get_site_option( 'admin_email' );
+	// Only redirect email that is NOT already going to the admin
+    if ( $admin_email != $mail_args['to'] ) {
+        $mail_args['message'] = 'Originally to: ' . $mail_args['to'] . "\n\n" . $mail_args['message'];
+        $mail_args['subject'] = 'WPLT REDIRECTED MAIL | ' . $mail_args['subject'];
+        $mail_args['to'] = $admin_email;
+    }
+        return $mail_args;
 }
