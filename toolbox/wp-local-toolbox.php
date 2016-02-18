@@ -13,10 +13,10 @@ if (defined('WPLT_SERVER') && WPLT_SERVER) {
 		/**
 		 * Everything except PRODUCTION/LIVE Environment
 		 */
-		
+
 		// Use a high priority of 1000 to give other plugins room to also modify this filter.
 		add_filter( 'wp_mail', 'wplt_email_redirect', 1000, 1 );
-		
+
 		// Hide from robots
 		add_filter('pre_option_blog_public', '__return_zero');
 
@@ -34,11 +34,16 @@ if (defined('WPLT_SERVER') && WPLT_SERVER) {
 	function environment_notice() {
 		$env_text = strtoupper(WPLT_SERVER);
 
+		$env_text = $env_text . ' SERVER';
+		if (strtoupper(WPLT_SERVER) != 'LIVE' && strtoupper(WPLT_SERVER) != 'PRODUCTION') {
+            $env_text = $env_text . ' (NO INDEX)';
+        }
+
 		$admin_notice = array(
 			// puts it on the right side.
 			'parent' => 'top-secondary',
 			'id' => 'environment-notice',
-			'title' => '<span>' . $env_text . ' SERVER</span>',
+			'title' => '<span>' . $env_text . '</span>',
 		);
 		global $wp_admin_bar;
 		$wp_admin_bar->add_menu($admin_notice);
@@ -143,7 +148,7 @@ if (defined('WPLT_SERVER') && WPLT_SERVER) {
 		}
 
 		if (is_admin_bar_showing()) {
-			
+
 			// Add the environment to the admin panel
 			add_action('admin_bar_menu', 'environment_notice');
 
@@ -165,10 +170,10 @@ if (defined('WPLT_SERVER') && WPLT_SERVER) {
  */
 
 if (defined('WPLT_NOTIFY') && WPLT_NOTIFY) {
- 
+
 	// Send notification when a post status changes
 	add_action( 'transition_post_status', 'notify_on_post_update', 10, 3 );
-	
+
 	// Send a notification for new attachments, unless we don't want to
 	if (defined('WPLT_DISABLE_ATTACHMENT_NOTIFY') && WPLT_DISABLE_ATTACHMENT_NOTIFY) {
 		return;
@@ -194,12 +199,12 @@ if (defined('WPLT_NOTIFY') && WPLT_NOTIFY) {
 		// And only if it's published
 		if (get_post_status($post_id) == 'publish') {
 
-			// Only look for the author if it's not an attachment, and only 
+			// Only look for the author if it's not an attachment, and only
 			// tell us about the author if he has a name.
 			if (get_post_type( $post_id ) != 'attachment' ) {
 				if (get_the_modified_author($post_id) != null) {
 					$author = " by " . get_the_modified_author($post_id);
-				} 
+				}
 			} else {
 				$author = null;
 			}
@@ -226,9 +231,9 @@ if (defined('WPLT_NOTIFY') && WPLT_NOTIFY) {
 
 			// Check if it's a Slack Webhook URL
 			if (strpos(WPLT_NOTIFY,'hooks.slack.com') !== false) {
-				
+
 				// Check if we've defined a Slack channel
-				$bot_args = array( 
+				$bot_args = array(
 					'attachments' => array(
 						0 => array(
 							'fallback' => $short_message,
@@ -252,7 +257,7 @@ if (defined('WPLT_NOTIFY') && WPLT_NOTIFY) {
 				}
 
 				$payload = array( 'payload' => json_encode( $bot_args ) );
-				
+
 				// Send the payload to Slack.
 				$posting = wp_remote_post( WPLT_NOTIFY, array( 'body' => $payload ) );
 
@@ -264,7 +269,7 @@ if (defined('WPLT_NOTIFY') && WPLT_NOTIFY) {
 			}
 		} // end if (get_post_status($post_id) == 'publish')
 	} // end function notify_on_post_update
- 
+
 	// Detect if this is a new post or not.
 	function is_new_post( $new_status, $old_status ) {
 		$published = false;
