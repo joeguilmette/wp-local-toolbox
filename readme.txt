@@ -42,6 +42,19 @@ define('WPLT_COLOR', 'purple');
 define('WPLT_ADMINBAR', 'always');
 `
 
+= Search Engine Visibility =
+
+Force the 'Discourage search engines from indexing this site' option to be either enabled or disabled. Very helpful in production and staging environments.
+
+* **WPLT_ROBOTS**: `index` to force your site to encourage search engines to index it, `noindex` to force your site to discourage search engine's from indexing it.
+
+**In wp-config.php:**
+
+`
+// force site to NOINDEX
+define('WPLT_ROBOTS', 'noindex');
+`
+
 = Disable Plugins =
 
 Pass a serialized array in this constant to disable plugins. This does not store any data in the database, so plugins that are manually deactivated or activated through the admin panel will stay so.
@@ -141,6 +154,10 @@ You're welcome.
 * A healthy refactoring from [Jon Brown](https://twitter.com/jb510) of [9seeds](http://9seeds.com/)
 
 == Changelog ==
+
+= 1.3.0 =
+* IMPORTANT: Search engine visibility is now entirely optional and must be configured for all environments
+* Remove ' SERVER' from the admin bar
 
 = 1.2.3 =
 * Fix HTTP count for Airplane Mode

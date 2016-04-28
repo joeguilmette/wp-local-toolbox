@@ -17,9 +17,6 @@ if (defined('WPLT_SERVER') && WPLT_SERVER) {
 		// Use a high priority of 1000 to give other plugins room to also modify this filter.
 		add_filter( 'wp_mail', 'wplt_email_redirect', 1000, 1 );
 
-		// Hide from robots
-		add_filter('pre_option_blog_public', '__return_zero');
-
 	} else {
 		/**
 		 * PRODUCTION/LIVE Environment
@@ -34,9 +31,24 @@ if (defined('WPLT_SERVER') && WPLT_SERVER) {
 	function environment_notice() {
 		$env_text = strtoupper(WPLT_SERVER);
 
-		if (strtoupper(WPLT_SERVER) != 'LIVE' && strtoupper(WPLT_SERVER) != 'PRODUCTION') {
-            $env_text = $env_text . ' (NO INDEX)';
-        }
+		// add search engine visibility status
+		
+		if (defined('WPLT_ROBOTS') && WPLT_ROBOTS) {
+			
+			if (strtoupper(WPLT_ROBOTS) === 'NOINDEX') {
+	            $env_text = $env_text . ' (NOINDEX)';
+	    		
+	    		// hide from robots
+				add_filter('pre_option_blog_public', '__return_zero');
+			}
+	        
+	        if (strtoupper(WPLT_ROBOTS) === 'INDEX') {
+	        	$env_text = $env_text . ' (INDEX)';
+
+	        	// force robots to play with me
+	        	add_filter('pre_option_blog_public', '__return_true');
+	        }
+	    }
 
 		$admin_notice = array(
 			// puts it on the right side.
@@ -325,10 +337,9 @@ if (defined('WPLT_DISABLED_PLUGINS') && WPLT_DISABLED_PLUGINS) {
 	new WPLT_Disable_Plugins(unserialize(WPLT_DISABLED_PLUGINS));
 }
 
-
 /**
  * =======================================
- * =======Redirect Email on Staging ======
+ * =======Redirect Email on Staging=======
  * =======================================
  */
 function wplt_email_redirect( $mail_args ) {
