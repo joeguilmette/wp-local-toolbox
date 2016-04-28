@@ -1,33 +1,12 @@
 <?php
 
 if (defined('WPLT_SERVER') && WPLT_SERVER) {
-	/*
-	You can edit this to do certain things depending on your how you've
-	defined the WPLT_SERVER constant. This can be very useful if
-	you want to perform certain actions depending on which server you're
-	using.
 
-	If you come up with something cool I'd love a pull request!
+	/**
+	 * =======================================
+	 * ===============Admin Bar===============
+	 * =======================================
 	 */
-	if (strtoupper(WPLT_SERVER) != 'LIVE' && strtoupper(WPLT_SERVER) != 'PRODUCTION') {
-		/**
-		 * Everything except PRODUCTION/LIVE Environment
-		 */
-
-		// Use a high priority of 1000 to give other plugins room to also modify this filter.
-		add_filter( 'wp_mail', 'wplt_email_redirect', 1000, 1 );
-
-	} else {
-		/**
-		 * PRODUCTION/LIVE Environment
-		 */
-	}
-
-/**
- * =======================================
- * ===============Admin Bar===============
- * =======================================
- */
 	function environment_notice() {
 		$env_text = strtoupper(WPLT_SERVER);
 
@@ -173,6 +152,7 @@ if (defined('WPLT_SERVER') && WPLT_SERVER) {
 	}
 	add_action('init', 'wplt_server_init');
 } else {
+	// if WPLT_SERVER is undefined
 	function welcome_to_wplt() {
     ?>
 <div class="notice notice-info is-dismissible">
@@ -346,20 +326,4 @@ if (defined('WPLT_DISABLED_PLUGINS') && WPLT_DISABLED_PLUGINS) {
 
 	require_once __DIR__ . '/inc/WPLT_Disable_Plugins.php';
 	new WPLT_Disable_Plugins(unserialize(WPLT_DISABLED_PLUGINS));
-}
-
-/**
- * =======================================
- * =======Redirect Email on Staging=======
- * =======================================
- */
-function wplt_email_redirect( $mail_args ) {
-	$admin_email = get_site_option( 'admin_email' );
-	// Only redirect email that is NOT already going to the admin
-    if ( $admin_email != $mail_args['to'] ) {
-        $mail_args['message'] = 'Originally to: ' . $mail_args['to'] . "\n\n" . $mail_args['message'];
-        $mail_args['subject'] = 'WPLT REDIRECTED MAIL | ' . $mail_args['subject'];
-        $mail_args['to'] = $admin_email;
-    }
-        return $mail_args;
 }
