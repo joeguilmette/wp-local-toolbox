@@ -34,7 +34,6 @@ if (defined('WPLT_SERVER') && WPLT_SERVER) {
 	function environment_notice() {
 		$env_text = strtoupper(WPLT_SERVER);
 
-		$env_text = $env_text . ' SERVER';
 		if (strtoupper(WPLT_SERVER) != 'LIVE' && strtoupper(WPLT_SERVER) != 'PRODUCTION') {
             $env_text = $env_text . ' (NO INDEX)';
         }
