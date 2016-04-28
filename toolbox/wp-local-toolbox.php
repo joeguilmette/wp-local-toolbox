@@ -172,6 +172,17 @@ if (defined('WPLT_SERVER') && WPLT_SERVER) {
 		}
 	}
 	add_action('init', 'wplt_server_init');
+} else {
+	function welcome_to_wplt() {
+    ?>
+<div class="notice notice-info is-dismissible">
+    <h2><?php _e( 'Thanks for trying WP Local Toolbox', 'wp-local-toolbox' ); ?></h2>
+    <p><?php _e( "WP Local Toolbox is configured with constants added to your wp-config.php file.", 'wp-local-toolbox' ); ?></p>
+    <p><?php _e( "Read more: ", 'wp-local-toolbox' ); ?><a href="https://github.com/joeguilmette/wp-local-toolbox" style="top:0">https://github.com/joeguilmette/wp-local-toolbox</a></p>
+</div>
+<?php
+	}
+	add_action( 'admin_notices', 'welcome_to_wplt' );
 }
 
 /**

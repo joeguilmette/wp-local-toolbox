@@ -7,6 +7,7 @@ Version: 1.3.0
 Author URI: http://joeguilmette.com
 Plugin URI: https://github.com/joeguilmette/wp-local-toolbox
 License: GPLv2+
+Text Domain: wp-local-toolbox
  */
 
 $required_php_version = '5.3.0';
