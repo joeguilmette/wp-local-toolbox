@@ -327,3 +327,27 @@ if (defined('WPLT_DISABLED_PLUGINS') && WPLT_DISABLED_PLUGINS) {
 	require_once __DIR__ . '/inc/WPLT_Disable_Plugins.php';
 	new WPLT_Disable_Plugins(unserialize(WPLT_DISABLED_PLUGINS));
 }
+
+/**
+ * =======================================
+ * =========Media from Production=========
+ * =======================================
+ */
+if ( defined( 'WPLT_MEDIA_FROM_PROD_URL' ) && WPLT_MEDIA_FROM_PROD_URL ) {
+	// Require Bill Erickson's Media from Production plugin 
+	require_once __DIR__ . '/lib/BE-Media-from-Production/be-media-from-production.php';
+	// MEDIA URL
+	add_filter( 'be_media_from_production_url', function( $url) { return WPLT_MEDIA_FROM_PROD_URL; } );
+	// Start Month
+	if ( defined( 'WPLT_MEDIA_FROM_PROD_START_MONTH' ) && WPLT_MEDIA_FROM_PROD_START_MONTH ) {
+		add_filter( 'be_media_from_production_start_month', function( $month) { return PLT_MEDIA_FROM_PROD_START_MONTH; } );
+	}
+	// Start Year
+	if ( defined( 'WPLT_MEDIA_FROM_PROD_START_YEAR' ) && WPLT_MEDIA_FROM_PROD_START_YEAR ) {
+		add_filter( 'be_media_from_production_start_year', function( $year) { return WPLT_MEDIA_FROM_PROD_START_YEAR; } );
+	// Array of Directories
+	}
+	if ( defined( 'WPLT_MEDIA_FROM_PROD_DIRECTORIES' ) && WPLT_MEDIA_FROM_PROD_DIRECTORIES ) {
+		add_filter( 'be_media_from_production_url', function( $directories) { return WPLT_MEDIA_FROM_PROD_DIRECTORIES;	} );
+	}
+}

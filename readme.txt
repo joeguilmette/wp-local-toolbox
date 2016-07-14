@@ -101,13 +101,27 @@ define('WPLT_NOTIFY', 'https://hooks.slack.com/services/etc');
 define('WPLT_NOTIFY_CHANNEL','#channel');
 `
 
+= Load Media from Production =
+
+Load media from production based on Bill Erickson's Plugin. See https://github.com/billerickson/BE-Media-from-Production for more details
+
+// MEDIA URL (required)
+define('WPLT_MEDIA_FROM_PROD_URL', 'http://example.com/');
+// Start Month (optional)
+define('WPLT_MEDIA_FROM_PROD_START_MONTH', '10');
+// Start Year (optional)
+define('WPLT_MEDIA_FROM_PROD_START_YEAR', '2016');
+// Array of Directories (optional)
+define('WPLT_MEDIA_FROM_PROD_DIRECTORIES', array( '2016/01', '2016/02' ) ); 
+
+
 = Airplane Mode =
 
-Control loading of external files when developing locally. WP loads certain external files (fonts, gravatar, etc) and makes external HTTP calls. This isn't usually an issue, unless you're working in an evironment without a web connection. This plugin removes / unhooks those actions to reduce load time and avoid errors due to missing files.
+Control loading of external files when developing locally. WP loads certain external files (fonts, gravatar, etc) and makes external HTTP calls. This isn't usually an issue, unless you're working in an environment without a web connection. This plugin removes / unhooks those actions to reduce load time and avoid errors due to missing files.
 
 On and Off: Can be toggled from the admin bar by clicking 'Airplane Mode'. In the admin bar a ✗ or ✓ will indicate if Airplane Mode is enabled or disabled. 
 
-* **WPLT_AIRPLANE**: Set this to anything to enable the Airpane Mode toggle.
+* **WPLT_AIRPLANE**: Set this to anything to enable the Airplane Mode toggle.
 
 **In wp-config.php**:
 
