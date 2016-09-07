@@ -162,7 +162,9 @@ if (defined('WPLT_SERVER') && WPLT_SERVER) {
 </div>
 <?php
 	}
-	add_action( 'admin_notices', 'welcome_to_wplt' );
+	// yuck
+	// this fires for every user on every pageload, what was I thinking
+	// add_action( 'admin_notices', 'welcome_to_wplt' );
 }
 
 /**
