@@ -650,8 +650,6 @@ if ( ! class_exists( 'Airplane_Mode_Core' ) ) {
 			remove_action( 'admin_init', '_maybe_update_plugins' );
 
 			// Disable Core updates
-			// @@ TODO figure out how to do this without a create_function
-			add_action( 'init', create_function( '', 'remove_action( \'init\', \'wp_version_check\' );' ), 2 );
 
 			// Don't look for WordPress updates. Seriously!
 			remove_action( 'wp_version_check', 'wp_version_check' );
