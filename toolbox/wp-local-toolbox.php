@@ -11,16 +11,16 @@ if (defined('WPLT_SERVER') && WPLT_SERVER) {
 		$env_text = strtoupper(WPLT_SERVER);
 
 		// add search engine visibility status
-		
+
 		if (defined('WPLT_ROBOTS') && WPLT_ROBOTS) {
-			
+
 			if (strtoupper(WPLT_ROBOTS) === 'NOINDEX') {
 	            $env_text = $env_text . ' (NOINDEX)';
-	    		
+
 	    		// hide from robots
 				add_filter('pre_option_blog_public', '__return_zero');
 			}
-	        
+
 	        if (strtoupper(WPLT_ROBOTS) === 'INDEX') {
 	        	$env_text = $env_text . ' (INDEX)';
 
@@ -325,6 +325,26 @@ if (defined('WPLT_AIRPLANE') && WPLT_AIRPLANE) {
  * =======================================
  */
 if (defined('WPLT_DISABLED_PLUGINS') && WPLT_DISABLED_PLUGINS) {
+	require_once ABSPATH . 'wp-admin/includes/plugin.php';
+
+	$mu_plugins = get_mu_plugins();
+	$in_mu_plugins = array_filter($mu_plugins, function($item) {
+		return !empty($item['Name']) && $item['Name'] === 'WP Local Toolbox';
+	});
+
+	if (!$in_mu_plugins) {
+		function wplt_not_in_mu_plugins() {
+?>
+<div class="notice notice-info is-dismissible">
+	<h2><?php _e( 'WP Local Toolbox must be installed as a mu-plugin to use the Disable Plugins feature.', 'wp-local-toolbox' ); ?></h2>
+	<p><?php _e( 'You have defined the <code>WPLT_DISABLED_PLUGINS</code> constant but have not installed WP Local Toolbox as a mu-plugin.<br>In order for this feature to function properly, WP Local Toolbox must be installed as a mu-plugin.', 'wp-local-toolbox' ); ?></p>
+	<p><?php _e( 'You can read more about mu-plugins here: ', 'wp-local-toolbox' ); ?><a href="https://codex.wordpress.org/Must_Use_Plugins" style="top:0">https://codex.wordpress.org/Must_Use_Plugins</a></p>
+</div>
+<?php
+	    }
+
+	    add_action( 'admin_notices', 'wplt_not_in_mu_plugins' );
+	}
 
 	require_once __DIR__ . '/inc/WPLT_Disable_Plugins.php';
 	new WPLT_Disable_Plugins(unserialize(WPLT_DISABLED_PLUGINS));
@@ -336,7 +356,7 @@ if (defined('WPLT_DISABLED_PLUGINS') && WPLT_DISABLED_PLUGINS) {
  * =======================================
  */
 if ( defined( 'WPLT_MEDIA_FROM_PROD_URL' ) && WPLT_MEDIA_FROM_PROD_URL ) {
-	// Require Bill Erickson's Media from Production plugin 
+	// Require Bill Erickson's Media from Production plugin
 	require_once __DIR__ . '/lib/BE-Media-from-Production/be-media-from-production.php';
 	// MEDIA URL
 	add_filter( 'be_media_from_production_url', function( $url) { return WPLT_MEDIA_FROM_PROD_URL; } );
