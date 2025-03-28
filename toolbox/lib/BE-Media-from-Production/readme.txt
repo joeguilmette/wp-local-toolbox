@@ -1,15 +1,13 @@
-# BE Media from Production
-
-Contributors: billerickson,magicroundabout  
+=== BE Media from Production ===
+Contributors: billerickson
+Tags: image, images, media, staging, local, development
 Requires at least: 4.3
-Tested up to: 6.6  
-Stable tag: 1.8.0  
-License: GPLv2 or later  
-License URI: http://www.gnu.org/licenses/gpl-2.0.html  
+Tested up to: 6.3
+Stable tag: 1.7.0
 
-Uses local media when available, and uses the production server for the rest.
+For developers - Uses local media when available, and uses the production server for the rest.
 
-## Description
+== Description ==
 
 When redesigning a website with a large uploads directory, you might not need all those uploads in your development
 or staging environment, but you also don't want to see broken images throughout the site.
@@ -18,7 +16,7 @@ This plugin lets you use the production server for missing media. Define the pro
 
 In all cases, if a local file exists, it will be used in preference to the remote file.
 
-## Installation
+== Installation ==
 
 Once the plugin is installed, add the following constant to wp-config.php with your production URL.
 
@@ -34,15 +32,14 @@ add_filter( 'be_media_from_production_url', function() {
 });
 ```
 
-
-## Installation via WP-CLI and constants
+**Installation via WP-CLI and constants**
 
 ```
-wp plugin install https://github.com/billerickson/be-media-from-production/archive/master.zip --force --activate
+wp plugin install --activate be-media-from-production
 wp config set BE_MEDIA_FROM_PRODUCTION_URL https://www.billerickson.net --type=constant
 ```
 
-## Using with WP Migrate
+**Using with WP Migrate**
 
 [WP Migrate](https://deliciousbrains.com/wp-migrate-db-pro/) is my preferred tool for pushing/pulling databases between environments. The media files functionality allows you to transfer media between environments along with the database.
 

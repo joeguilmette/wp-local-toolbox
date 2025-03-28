@@ -5,7 +5,7 @@
  * Description: Uses local media when it's available, and uses the production server for rest.
  * Author:      Bill Erickson
  * Author URI:  http://www.billerickson.net
- * Version:     1.2.0
+ * Version:     1.8.0
  * Text Domain: be-media-from-production
  * Domain Path: languages
  *
@@ -54,23 +54,23 @@ class BE_Media_From_Production {
 	 * @var array
 	 */
 	public $directories = array();
-	
+
 	/**
 	 * Start Month
-	 * 
+	 *
 	 * @since 1.0.0
 	 * @var int
 	 */
 	public $start_month = false;
-	
+
 	/**
-	 * Start Year 
+	 * Start Year
 	 *
 	 * @since 1.0.0
 	 * @var int
 	 */
 	public $start_year = false;
-	
+
 	/**
 	 * Primary constructor.
 	 *
@@ -78,55 +78,18 @@ class BE_Media_From_Production {
 	 */
 	function __construct() {
 
-		// Set upload directories
-		add_action( 'init',                               array( $this, 'set_upload_directories' )     );
-		
 		// Update Image URLs
-		add_filter( 'wp_get_attachment_image_src',        array( $this, 'image_src'              )     );
-		add_filter( 'wp_get_attachment_image_attributes', array( $this, 'image_attr'             ), 99 );
-		add_filter( 'the_content',                        array( $this, 'image_content'          )     );
-		
-	}
-	
-	/**
-	 * Set upload directories
-	 *
-	 * @since 1.0.0
-	 */
-	function set_upload_directories() {
-		
-		if( empty( $this->directories ) )
-			$this->directories = $this->get_upload_directories();
-		
-	}
+		add_filter( 'wp_get_attachment_image_src',        array( $this, 'image_src'              )        );
+		add_filter( 'wp_get_attachment_image_attributes', array( $this, 'image_attr'             ), 99    );
+		add_filter( 'wp_prepare_attachment_for_js',       array( $this, 'image_js'               ), 10, 3 );
+		add_filter( 'wp_content_img_tag',       	      array( $this, 'image_tag'              ), 10, 3 );
+		add_filter( 'the_content',                        array( $this, 'image_content'          )        );
+		add_filter( 'wp_get_attachment_url',              array( $this, 'update_image_url'       )        );
+		add_filter( 'the_post',                           array( $this, 'update_post_content'    )        );
 
-	/**
-	 * Determine Upload Directories
-	 *
-	 * @since 1.0.0
-	 */
-	function get_upload_directories() {
-	
-		// Include all upload directories starting from a specific month and year
-		$month = str_pad( apply_filters( 'be_media_from_production_start_month', $this->start_month ), 2, 0, STR_PAD_LEFT );
-		$year = apply_filters( 'be_media_from_production_start_year', $this->start_year );
-	
-		$upload_dirs = array();
+		// Plugin updates
+		add_action( 'init', array( $this, 'updates' ) );
 
-		if( $month && $year ) {
-			for( $i = 0; $year . $month <= date( 'Ym' ); $i++ ) {
-				$upload_dirs[] = $year . '/' . $month;
-				$month++;
-				if( 13 == $month ) {
-					$month = 1;
-					$year++;
-				}
-				$month = str_pad( $month, 2, 0, STR_PAD_LEFT );
-			}
-		}
-		
-		return apply_filters( 'be_media_from_production_directories', $upload_dirs );
-			
 	}
 
 	/**
@@ -137,13 +100,13 @@ class BE_Media_From_Production {
 	 * @return array $image
 	 */
 	function image_src( $image ) {
-	
+
 		if( isset( $image[0] ) )
 			$image[0] = $this->update_image_url( $image[0] );
 		return $image;
-				
+
 	}
-	
+
 	/**
 	 * Modify Image Attributes
 	 *
@@ -152,13 +115,64 @@ class BE_Media_From_Production {
 	 * @return array $attr
 	 */
 	function image_attr( $attr ) {
-		
-		if( isset( $attr['srcset'] ) )
-			$attr['srcset'] = $this->update_image_url( $attr['srcset'] );
+
+		if( isset( $attr['srcset'] ) ) {
+			$srcset = explode( ' ', $attr['srcset'] );
+			foreach( $srcset as $i => $image_url ) {
+				$srcset[ $i ] = $this->update_image_url( $image_url );
+			}
+			$attr['srcset'] = join( ' ', $srcset );
+		}
 		return $attr;
 
 	}
-	
+
+	/**
+	 * Modify Image for Javascript
+	 * Primarily used for media library
+	 *
+	 * @since 1.3.0
+	 * @param array      $response   Array of prepared attachment data
+	 * @param int|object $attachment Attachment ID or object
+	 * @param array      $meta       Array of attachment metadata
+	 * @return array     $response   Modified attachment data
+	 */
+	function image_js( $response, $attachment, $meta ) {
+
+		if( isset( $response['url'] ) )
+			$response['url'] = $this->update_image_url( $response['url'] );
+
+		foreach( $response['sizes'] as &$size ) {
+			$size['url'] = $this->update_image_url( $size['url'] );
+		}
+
+		return $response;
+	}
+
+	/**
+	 * Modify Image Tags
+	 *
+	 * @since 1.7.0
+	 * @param string $filtered_image Full img tag with attributes that will replace the source img tag.
+	 * @param string $context        Additional context, like the current filter name or the function name from where this was called.
+	 * @param int    $attachment_id  The image attachment ID. May be 0 in case the image is not an attachment.
+	 */
+	function image_tag( $filtered_image, $context, $attachment_id ) {
+		$upload_locations = wp_upload_dir();
+
+		$regex = '/https?\:\/\/[^\" ]+/i';
+		preg_match_all($regex, $filtered_image, $matches);
+
+		foreach( $matches[0] as $url ) {
+			if( false !== strpos( $url, $upload_locations[ 'baseurl' ] ) ) {
+				$new_url = $this->update_image_url( $url );
+				$filtered_image = str_replace( $url, $new_url, $filtered_image );
+			}
+		}
+
+		return $filtered_image;
+	}
+
 	/**
 	 * Modify Images in Content
 	 *
@@ -167,15 +181,42 @@ class BE_Media_From_Production {
 	 * @return string $content
 	 */
 	function image_content( $content ) {
+		$upload_locations = wp_upload_dir();
+
 		$regex = '/https?\:\/\/[^\" ]+/i';
 		preg_match_all($regex, $content, $matches);
+
 		foreach( $matches[0] as $url ) {
-			if( strpos( $url, 'wp-content/uploads' ) ) {
+			if( false !== strpos( $url, $upload_locations[ 'baseurl' ] ) ) {
 				$new_url = $this->update_image_url( $url );
 				$content = str_replace( $url, $new_url, $content );
 			}
 		}
 		return $content;
+	}
+
+	/**
+	 * Convert a URL to a local filename
+	 *
+	 * @since 1.4.0
+	 * @param string $url
+	 * @return string $local_filename
+	 */
+	function local_filename( $url ) {
+		$upload_locations = wp_upload_dir();
+		$local_filename = str_replace( $upload_locations[ 'baseurl' ], $upload_locations[ 'basedir' ], $url );
+		return $local_filename;
+	}
+
+	/**
+	 * Determine if local image exists
+	 *
+	 * @since 1.4.0
+	 * @param string $url
+	 * @return boolean
+	 */
+	function local_image_exists( $url ) {
+		return file_exists( $this->local_filename( $url ) );
 	}
 
 	/**
@@ -189,28 +230,61 @@ class BE_Media_From_Production {
 
 		if( ! $image_url )
 			return $image_url;
-		
-		$production_url = esc_url( apply_filters( 'be_media_from_production_url', $this->production_url ) );
+
+		if ( $this->local_image_exists( $image_url ) ) {
+			return $image_url;
+		}
+
+		$production_url = esc_url( $this->get_production_url() );
 		if( empty( $production_url ) )
 			return $image_url;
-	
-		$exists = false;
-		$upload_dirs = $this->directories;
-		if( $upload_dirs ) {		
-			foreach( $upload_dirs as $option ) {
-				if( strpos( $image_url, $option ) ) {
-					$exists = true;
-				}
-			}
-		}
-				
-		if( ! $exists ) {
-			$image_url = str_replace( home_url(), $production_url, $image_url );
-		}
-			
+
+		$image_url = str_replace( trailingslashit( home_url() ), trailingslashit( $production_url ), $image_url );
 		return $image_url;
 	}
-	
+
+	/**
+	 * Update Post Content
+	 */
+	function update_post_content( $post ) {
+		$post->post_content = $this->image_content( $post->post_content );
+		return $post;
+	}
+
+	/**
+	 * Return the production URL
+	 *
+	 * First, this method checks if constant `BE_MEDIA_FROM_PRODUCTION_URL`
+	 * exists and non-empty. Than applies a filter `be_media_from_production_url`.
+	 *
+	 * @since 1.5.0
+	 * @return string
+	 */
+	public function get_production_url() {
+		$production_url = $this->production_url;
+		if ( defined( 'BE_MEDIA_FROM_PRODUCTION_URL' ) && BE_MEDIA_FROM_PRODUCTION_URL ) {
+			$production_url = BE_MEDIA_FROM_PRODUCTION_URL;
+		}
+
+		return apply_filters( 'be_media_from_production_url', $production_url );
+	}
+
+	/**
+	 * Plugin updates via GitHub
+	 */
+	public function updates() {
+		require dirname( __FILE__ ) . '/updater/plugin-update-checker.php';
+ 
+		$myUpdateChecker = YahnisElsts\PluginUpdateChecker\v5\PucFactory::buildUpdateChecker(
+			'https://github.com/billerickson/be-media-from-production',
+			__FILE__,
+			'be-media-from-production'
+		);
+		
+		//Set the branch that contains the stable release.
+		$myUpdateChecker->setBranch('master');	
+	}
+
 }
 
 new BE_Media_From_Production;
