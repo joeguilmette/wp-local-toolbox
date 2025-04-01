@@ -1,5 +1,9 @@
 # WordPress Configuration Changelog
 
+## [2.0.1] - 2025-04-01
+### Changed
+- Minor fix for failure to read property 'title'
+
 ## [2.0.0] - 2025-03-28
 ### Changed
 - Complete environment detection overhaul
