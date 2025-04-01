@@ -93,7 +93,7 @@ final class WP_Local_Toolbox {
             add_action('admin_bar_menu', [$this, 'add_environment_notice'], 10);
             add_action('admin_head', [$this, 'add_environment_notice_css']);
             add_action('wp_head', [$this, 'add_environment_notice_css']);
-            add_filter('admin_bar_menu', [$this, 'remove_howdy_text'], 25);
+            add_filter('admin_bar_menu', [$this, 'goodbye_howdy'], 25);
         }
     }
 
@@ -200,18 +200,19 @@ final class WP_Local_Toolbox {
     /**
      * Remove "Howdy" text from admin bar
      */
-    public function remove_howdy_text(\WP_Admin_Bar $wp_admin_bar): void {
-        if (is_user_logged_in()) {
-            $my_account = $wp_admin_bar->get_node('my-account');
-            if ($my_account) {
-                $newtitle = str_replace('Howdy,', '', $my_account->title);
-                $wp_admin_bar->add_node([
-                    'id' => 'my-account',
-                    'title' => $newtitle,
-                ]);
-            }
-        }
-    }
+    public function goodbye_howdy(\WP_Admin_Bar $wp_admin_bar): void {
+		if (is_user_logged_in()) {
+			$my_account = $wp_admin_bar->get_node('my-account');
+			if (!$my_account || !isset($my_account->title)) {
+				return;
+			}
+			$newtitle = str_replace('Howdy,', '', $my_account->title);
+			$wp_admin_bar->add_node(array(
+				'id' => 'my-account',
+				'title' => $newtitle,
+			));
+		}
+	}
 
     /**
      * Add login link to admin bar when not logged in
